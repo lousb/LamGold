@@ -1,0 +1,64 @@
+@import url("./reset.css");
+@import url("./utils.css");
+
+:root {
+  --color-text: #000000;
+  --color-text-muted: #878580;
+  --color-bg: #ffffff;
+
+  --main-gap: 1ch;
+  --main-padding: 0.5ch;
+
+  --header-z-index: 10;
+  --title-z-index: 9;
+
+  --font-size: 12px;
+  --font-sans-serif: "Arial", ui-sans-serif, system-ui, sans-serif;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+  gap: var(--main-gap);
+  padding-inline: var(--main-gap);
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    padding-inline: calc(var(--main-gap) / 2);
+  }
+}
+
+.editorial-block {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+
+  @media (max-width: 768px) {
+    aspect-ratio: 4 / 3;
+  }
+
+  @media (max-width: 480px) {
+    aspect-ratio: 1 / 1;
+  }
+}
+
+.text-content {
+  position: absolute;
+  top: 50%;
+  padding: var(--main-padding);
+}
+
+.product-card {
+  position: relative;
+  aspect-ratio: 0.7;
+  margin: auto;
+
+  @media (max-width: 480px) {
+    aspect-ratio: 0.8;
+    width: 90%;
+  }
+}
