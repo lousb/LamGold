@@ -1,6 +1,21 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 /**
+ * Shared list of product type options, used both here (for footer filter
+ * links) and on the Product document's `type` field. Keeping this in one
+ * place means the two stay in sync - add a new jewellery type here and it
+ * shows up in both places.
+ */
+export const PRODUCT_TYPE_OPTIONS = [
+  { title: "Necklaces", value: "necklaces" },
+  { title: "Chains", value: "chains" },
+  { title: "Pendants", value: "pendants" },
+  { title: "Earrings", value: "earrings" },
+  { title: "Bracelets", value: "bracelets" },
+  { title: "Rings", value: "rings" },
+];
+
+/**
  * Footer schema object for LamGold.
  * Three columns as specified in the project brief:
  *  - Products: the list of product types, used to generate filter links
@@ -41,18 +56,3 @@ export const footer = defineType({
     }),
   ],
 });
-
-/**
- * Shared list of product type options, used both here (for footer filter
- * links) and on the Product document's `type` field. Keeping this in one
- * place means the two stay in sync - add a new jewellery type here and it
- * shows up in both places.
- */
-export const PRODUCT_TYPE_OPTIONS = [
-  { title: "Necklaces", value: "necklaces" },
-  { title: "Chains", value: "chains" },
-  { title: "Pendants", value: "pendants" },
-  { title: "Earrings", value: "earrings" },
-  { title: "Bracelets", value: "bracelets" },
-  { title: "Rings", value: "rings" },
-];
