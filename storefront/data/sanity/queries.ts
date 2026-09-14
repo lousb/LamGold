@@ -32,6 +32,12 @@ const homePageBuilderFields = /* groq */ `
   // productTypeSection
   heading,
   productType,
+  "products": select(
+    _type == "productTypeSection" => *[_type == "product" && type == ^.productType && defined(store.slug.current)] | order(_updatedAt desc) {
+      _id,
+      store,
+    }
+  ),
   // storySection
   body,
   "image": image{
