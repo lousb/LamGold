@@ -1,4 +1,6 @@
-import { AsteriskIcon, CubeIcon, DocumentTextIcon } from "@sanity/icons";
+import { AsteriskIcon } from "@sanity/icons/Asterisk";
+import { CubeIcon } from "@sanity/icons/Cube";
+import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 
 import type { StructureResolver } from "sanity/structure";
 import { singletonListItem, SINGLETONS } from "./singletons";

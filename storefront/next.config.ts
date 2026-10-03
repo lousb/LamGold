@@ -1,17 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    reactCompiler: true,
-    // typedRoutes: true,
-  },
+  reactCompiler: true,
   logging: {
     fetches: {
       // fullUrl: true,
     },
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,

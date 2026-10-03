@@ -1,6 +1,9 @@
 import type { StructureBuilder } from "sanity/structure";
 
-import { CogIcon, DiamondIcon, ExpandIcon, HomeIcon } from "@sanity/icons";
+import { CogIcon } from "@sanity/icons/Cog";
+import { DiamondIcon } from "@sanity/icons/Diamond";
+import { ExpandIcon } from "@sanity/icons/Expand";
+import { HomeIcon } from "@sanity/icons/Home";
 
 type Singleton = {
   _type: string;

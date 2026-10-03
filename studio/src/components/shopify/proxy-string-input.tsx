@@ -1,5 +1,6 @@
-import { LockIcon } from "@sanity/icons";
-import { Box, Text, TextInput, Tooltip } from "@sanity/ui";
+import { LockIcon } from "@sanity/icons/Lock";
+import { Box, Text, TextInput } from "@sanity/ui";
+import { Tooltip } from "@sanity/ui/tooltip";
 
 import get from "lodash.get";
 

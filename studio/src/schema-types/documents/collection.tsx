@@ -1,4 +1,4 @@
-import { PackageIcon } from "@sanity/icons";
+import { PackageIcon } from "@sanity/icons/Package";
 import pluralize from "pluralize-esm";
 import { defineField, defineType } from "sanity";
 import { ShopifyIcon } from "../../components/shopify-icon";

@@ -1,10 +1,10 @@
 import { PortableTextBlock } from "next-sanity";
-import { PAGE_QUERYResult } from "../sanity.types";
+import { PAGE_QUERY_RESULT } from "../sanity.types";
 import { CustomPortableText } from "./custom-portable-text";
 import { SanityImage } from "./sanity-image";
 
 export function EditorialBlock(props: {
-  block: NonNullable<NonNullable<PAGE_QUERYResult>["pageBuilder"]>[0];
+  block: NonNullable<NonNullable<PAGE_QUERY_RESULT>["pageBuilder"]>[0];
   index: number;
 }) {
   const { cover, content, textColor } = props.block;

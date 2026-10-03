@@ -1,6 +1,8 @@
 import { forwardRef, useState } from "react";
 
-import { CloseIcon, ImageIcon, LinkIcon } from "@sanity/icons";
+import { CloseIcon } from "@sanity/icons/Close";
+import { ImageIcon } from "@sanity/icons/Image";
+import { LinkIcon } from "@sanity/icons/Link";
 
 type Props = {
   isActive?: boolean;

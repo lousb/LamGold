@@ -1,4 +1,5 @@
-import { CogIcon, LockIcon } from "@sanity/icons";
+import { CogIcon } from "@sanity/icons/Cog";
+import { LockIcon } from "@sanity/icons/Lock";
 import { defineField, defineType } from "sanity";
 
 /**

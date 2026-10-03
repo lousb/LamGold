@@ -1,7 +1,8 @@
 import { useState } from "react";
 
-import { TrashIcon } from "@sanity/icons";
-import { Stack, Text, useToast } from "@sanity/ui";
+import { TrashIcon } from "@sanity/icons/Trash";
+import { Stack, Text } from "@sanity/ui";
+import { useToast } from "@sanity/ui/toast";
 import {
   type DocumentActionConfirmDialogProps,
   type DocumentActionDescription,
@@ -38,7 +39,7 @@ export const shopifyDelete = (
   if (type === "product") {
     dialog = {
       message: (
-        <Stack space={4}>
+        <Stack gap={4}>
           <Text>
             Delete the current product and all associated variants in your
             dataset.
@@ -103,7 +104,7 @@ export const shopifyDelete = (
   if (type === "collection") {
     dialog = {
       message: (
-        <Stack space={4}>
+        <Stack gap={4}>
           <Text>Delete the current collection in your dataset.</Text>
           <Text weight="medium">No content on Shopify will be deleted.</Text>
         </Stack>

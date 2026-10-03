@@ -71,6 +71,7 @@ export async function addToCart(
         merchandise: {
           id: merchandiseId,
           title: "",
+          variantImage: { url: "", altText: "", width: 0, height: 0 },
           selectedOptions: [],
           product: {
             id: "",

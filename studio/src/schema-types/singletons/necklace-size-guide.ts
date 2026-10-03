@@ -1,4 +1,4 @@
-import { ExpandIcon } from "@sanity/icons";
+import { ExpandIcon } from "@sanity/icons/Expand";
 import { defineField, defineType } from "sanity";
 
 const SIZES = [

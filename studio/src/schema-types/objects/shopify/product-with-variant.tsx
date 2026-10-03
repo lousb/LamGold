@@ -1,7 +1,7 @@
 import pluralize from "pluralize-esm";
 import { defineField } from "sanity";
 
-import { TagIcon } from "@sanity/icons";
+import { TagIcon } from "@sanity/icons/Tag";
 import { ShopifyDocumentStatus } from "../../../components/shopify/shopify-document-status";
 import { SANITY_API_VERSION } from "../../../constants";
 import { getPriceRange } from "../../../utils/get-price-range";

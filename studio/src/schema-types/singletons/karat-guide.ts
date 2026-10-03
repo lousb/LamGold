@@ -1,4 +1,4 @@
-import { DiamondIcon } from "@sanity/icons";
+import { DiamondIcon } from "@sanity/icons/Diamond";
 import { defineField, defineType } from "sanity";
 
 const KARATS = [

@@ -4,25 +4,24 @@ import { SanityDocument } from "next-sanity";
 import { useOptimistic } from "next-sanity/hooks";
 import Link from "next/link";
 
-import {
-  COLLECTION_QUERYResult,
-  HOME_QUERYResult,
-  PAGE_QUERYResult,
-  PRODUCT_QUERYResult,
-} from "../sanity.types";
 import { studioUrl } from "../sanity/api";
 import { dataAttr } from "../sanity/utils";
 import { BlockRenderer } from "./block-renderer";
 
-type Page =
-  | NonNullable<PAGE_QUERYResult>
-  | NonNullable<HOME_QUERYResult>
-  | NonNullable<PRODUCT_QUERYResult>
-  | NonNullable<COLLECTION_QUERYResult>["editorial"];
 
 type PageBuilderSection = {
   _key: string;
   _type: string;
+};
+
+/**
+ * Any document with a page builder: Home, Page, or a Collection's editorial.
+ * Kept structural so it accepts both plain and stega-encoded query results.
+ */
+type Page = {
+  _id: string;
+  _type: string;
+  pageBuilder?: ReadonlyArray<PageBuilderSection> | null;
 };
 
 type PageData = {
@@ -40,7 +39,7 @@ export function PageBuilder(props: { page: Page }) {
   const pageBuilderSections = useOptimistic<
     PageBuilderSection[] | undefined,
     SanityDocument<PageData>
-  >(page?.pageBuilder ?? undefined, (currentSections, action) => {
+  >((page?.pageBuilder as PageBuilderSection[] | null) ?? undefined, (currentSections, action) => {
     // The action contains updated document data from Sanity
     // when someone makes an edit in the Studio
 
