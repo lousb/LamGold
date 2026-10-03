@@ -16,6 +16,7 @@ import { footer } from "./objects/global/footer";
 import { header } from "./objects/global/header";
 import { link } from "./objects/global/link";
 import { pageSeo } from "./objects/global/page-seo";
+import { privacyPolicy } from "./objects/global/privacy-policy";
 import { inventory } from "./objects/shopify/inventory";
 import { option } from "./objects/shopify/option";
 import { placeholderString } from "./objects/shopify/placeholder-string";
@@ -27,12 +28,16 @@ import { shopifyCollectionRule } from "./objects/shopify/shopify-collection-rule
 import { shopifyProduct } from "./objects/shopify/shopify-product";
 import { shopifyProductVariant } from "./objects/shopify/shopify-product-variant";
 import { home } from "./singletons/home";
+import { karatGuide } from "./singletons/karat-guide";
+import { necklaceSizeGuide } from "./singletons/necklace-size-guide";
 import { settings } from "./singletons/settings";
 
 export const schemaTypes = [
   // Singletons
   settings,
   home,
+  karatGuide,
+  necklaceSizeGuide,
   // Documents
   collection,
   page,
@@ -50,6 +55,7 @@ export const schemaTypes = [
   customPieceSection,
   /// Global
   pageSeo,
+  privacyPolicy,
   link,
   header,
   footer,

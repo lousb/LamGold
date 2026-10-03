@@ -1,6 +1,6 @@
 import type { StructureBuilder } from "sanity/structure";
 
-import { CogIcon, HomeIcon } from "@sanity/icons";
+import { CogIcon, DiamondIcon, ExpandIcon, HomeIcon } from "@sanity/icons";
 
 type Singleton = {
   _type: string;
@@ -18,6 +18,18 @@ export const SINGLETONS: {
     _type: "home",
     title: "Home",
     icon: HomeIcon,
+  },
+  karatGuide: {
+    id: "karatGuide",
+    _type: "karatGuide",
+    title: "Karat Guide",
+    icon: DiamondIcon,
+  },
+  necklaceSizeGuide: {
+    id: "necklaceSizeGuide",
+    _type: "necklaceSizeGuide",
+    title: "Necklace Size Guide",
+    icon: ExpandIcon,
   },
   settings: {
     id: "settings",
