@@ -12,8 +12,8 @@ const capitalise = (value: string) =>
   value.charAt(0).toUpperCase() + value.slice(1);
 
 /**
- * Header/Desktop: fixed black bar, 40px from the top and left,
- * 100vw - 80px wide, split into three equal sections.
+ * Header/Desktop: fixed black bar, 20px from the top and left,
+ * 100vw - 40px wide, split into three equal sections.
  */
 export async function Header() {
   const { data: settings } = await sanityFetch({ query: SETTINGS_QUERY });

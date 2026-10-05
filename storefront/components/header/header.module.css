@@ -1,16 +1,16 @@
 /*
  * Header/Desktop
- * Fixed bar: 40px from top/left, 100vw - 80px wide, 31px tall.
+ * Fixed bar: 20px from top/left, 100vw - 40px wide, 31px tall.
  * Three equal sections (Products / Custom / Index + Cart), 10px inner
  * padding and 10px between sections.
  */
 
 .header {
   position: fixed;
-  top: 40px;
-  left: 40px;
+  top: 20px;
+  left: 20px;
   z-index: var(--header-z-index);
-  width: calc(100vw - 80px);
+  width: calc(100vw - 40px);
 }
 
 .bar {
