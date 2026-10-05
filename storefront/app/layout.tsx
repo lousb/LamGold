@@ -16,6 +16,7 @@ import Link from "next/link";
 import SanityLink from "../components/sanity-link";
 import { SanityImage } from "../components/sanity-image";
 
+import { GridOverlay } from "../components/grid-overlay";
 import Newsletter from "../components/newsletter";
 import { CartProvider } from "./_cart/cart-context";
 import { LocalCart } from "./_cart/local-cart";
@@ -77,6 +78,7 @@ export default async function RootLayout({
       <body>
         {/* The <Toaster> component is responsible for rendering toast notifications used in /app/client-utils.ts and /app/components/DraftModeToast.tsx */}
         <Toaster />
+        {process.env.NODE_ENV === "development" && <GridOverlay />}
         {isDraftMode && (
           <>
             <DraftModeToast />

@@ -1,0 +1,103 @@
+/**
+ * 24-column grid
+ * 10px outer margin, 10px gutter. Column width is fluid.
+ *
+ *   <div className="grid">
+ *     <div className="span-8">…</div>
+ *     <div className="span-12 start-13">…</div>
+ *   </div>
+ *
+ * Nest with `.subgrid` to keep children on the parent's columns.
+ */
+
+:root {
+  --grid-columns: 24;
+  --grid-margin: 10px;
+  --grid-gutter: 10px;
+  /* Approx. width of one column for sizing things off-grid
+     (100vw includes the scrollbar where one is shown) */
+  --grid-col: calc(
+    (100vw - (var(--grid-margin) * 2) - (var(--grid-gutter) * (var(--grid-columns) - 1))) /
+      var(--grid-columns)
+  );
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  column-gap: var(--grid-gutter);
+  padding-inline: var(--grid-margin);
+}
+
+/* Inherit the parent grid's columns (no extra margin) */
+.subgrid {
+  display: grid;
+  grid-template-columns: subgrid;
+  column-gap: var(--grid-gutter);
+}
+
+.span-full { grid-column: 1 / -1; }
+
+.span-1 { grid-column-end: span 1; }
+.span-2 { grid-column-end: span 2; }
+.span-3 { grid-column-end: span 3; }
+.span-4 { grid-column-end: span 4; }
+.span-5 { grid-column-end: span 5; }
+.span-6 { grid-column-end: span 6; }
+.span-7 { grid-column-end: span 7; }
+.span-8 { grid-column-end: span 8; }
+.span-9 { grid-column-end: span 9; }
+.span-10 { grid-column-end: span 10; }
+.span-11 { grid-column-end: span 11; }
+.span-12 { grid-column-end: span 12; }
+.span-13 { grid-column-end: span 13; }
+.span-14 { grid-column-end: span 14; }
+.span-15 { grid-column-end: span 15; }
+.span-16 { grid-column-end: span 16; }
+.span-17 { grid-column-end: span 17; }
+.span-18 { grid-column-end: span 18; }
+.span-19 { grid-column-end: span 19; }
+.span-20 { grid-column-end: span 20; }
+.span-21 { grid-column-end: span 21; }
+.span-22 { grid-column-end: span 22; }
+.span-23 { grid-column-end: span 23; }
+.span-24 { grid-column-end: span 24; }
+
+.start-1 { grid-column-start: 1; }
+.start-2 { grid-column-start: 2; }
+.start-3 { grid-column-start: 3; }
+.start-4 { grid-column-start: 4; }
+.start-5 { grid-column-start: 5; }
+.start-6 { grid-column-start: 6; }
+.start-7 { grid-column-start: 7; }
+.start-8 { grid-column-start: 8; }
+.start-9 { grid-column-start: 9; }
+.start-10 { grid-column-start: 10; }
+.start-11 { grid-column-start: 11; }
+.start-12 { grid-column-start: 12; }
+.start-13 { grid-column-start: 13; }
+.start-14 { grid-column-start: 14; }
+.start-15 { grid-column-start: 15; }
+.start-16 { grid-column-start: 16; }
+.start-17 { grid-column-start: 17; }
+.start-18 { grid-column-start: 18; }
+.start-19 { grid-column-start: 19; }
+.start-20 { grid-column-start: 20; }
+.start-21 { grid-column-start: 21; }
+.start-22 { grid-column-start: 22; }
+.start-23 { grid-column-start: 23; }
+.start-24 { grid-column-start: 24; }
+
+/* Dev overlay, toggled with Shift+G (see components/grid-overlay.tsx) */
+.grid-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  height: 100vh;
+}
+
+.grid-overlay > div {
+  background: rgba(255, 0, 0, 0.08);
+  border-inline: 1px solid rgba(255, 0, 0, 0.15);
+}
