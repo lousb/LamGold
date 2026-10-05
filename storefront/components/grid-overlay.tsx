@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 /**
- * Dev-only 24-column overlay. Press Shift+G to toggle.
+ * Dev-only 24-column overlay. Press Option+G (Alt+G) to toggle.
  */
 export function GridOverlay() {
   const [visible, setVisible] = useState(false);
@@ -12,7 +12,11 @@ export function GridOverlay() {
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
       if (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
-      if (e.shiftKey && e.key.toLowerCase() === "g") setVisible((v) => !v);
+      // Match the physical key: on macOS Option+G produces "©", not "g"
+      if (e.altKey && !e.metaKey && !e.ctrlKey && e.code === "KeyG") {
+        e.preventDefault();
+        setVisible((v) => !v);
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);

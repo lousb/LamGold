@@ -88,7 +88,7 @@
 .start-23 { grid-column-start: 23; }
 .start-24 { grid-column-start: 24; }
 
-/* Dev overlay, toggled with Shift+G (see components/grid-overlay.tsx) */
+/* Dev overlay, toggled with Option+G (see components/grid-overlay.tsx) */
 .grid-overlay {
   position: fixed;
   inset: 0;
