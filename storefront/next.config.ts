@@ -1,6 +1,13 @@
+import path from "node:path";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Pin the workspace root to the LamGold repo. Without this, Turbopack can
+  // pick up a stray lockfile/node_modules higher up (e.g. in ~) and resolve
+  // packages from the wrong place.
+  turbopack: {
+    root: path.join(__dirname, ".."),
+  },
   reactCompiler: true,
   logging: {
     fetches: {
