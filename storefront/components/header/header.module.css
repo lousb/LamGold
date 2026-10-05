@@ -1,0 +1,63 @@
+/*
+ * Header/Desktop
+ * Fixed bar: 40px from top/left, 100vw - 80px wide, 31px tall.
+ * Three equal sections (Products / Custom / Index + Cart), 10px inner
+ * padding and 10px between sections.
+ */
+
+.header {
+  position: fixed;
+  top: 40px;
+  left: 40px;
+  z-index: var(--header-z-index);
+  width: calc(100vw - 80px);
+}
+
+.bar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 10px;
+  align-items: center;
+  height: 31px;
+  padding-inline: 10px;
+  background: #000;
+  color: #fff;
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19px;
+}
+
+.bar a,
+.bar button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.bar a:hover,
+.bar button:hover {
+  text-decoration: underline;
+}
+
+.products {
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.section {
+  min-width: 0;
+}
+
+/* Index on the left, Cart (0) pushed to the right edge */
+.split {
+  display: flex;
+  justify-content: space-between;
+}

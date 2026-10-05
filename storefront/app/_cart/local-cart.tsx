@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 const Cart = dynamic(() => import("./cart").then((mod) => mod.Cart), {
   ssr: false,
-  loading: () => <>Cart―</>,
+  loading: () => <span>Cart (0)</span>,
 });
 
 export function LocalCart() {

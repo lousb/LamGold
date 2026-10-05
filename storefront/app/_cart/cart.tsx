@@ -26,8 +26,6 @@ export function Cart() {
     if (cart) saveCart(cart);
   }, [cart]);
 
-  console.log(cart);
-
   return (
     <>
       {!isOpen ? (
@@ -196,15 +194,12 @@ function CheckoutButton() {
 
 function OpenCart({ quantity }: { quantity?: number }) {
   return (
-    <div>
-      {"Cart "}
-      {quantity ? <> {quantity}</> : null}
-    </div>
+    <span>Cart ({quantity ?? 0})</span>
   );
 }
 
 function CloseCart() {
-  return <div className="color-black">Close</div>;
+  return <span>Close</span>;
 }
 
 function DeleteItemButton({

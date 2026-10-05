@@ -12,13 +12,11 @@ import { HOME_QUERY, SETTINGS_QUERY } from "../data/sanity/queries";
 import { resolveOpenGraphImage } from "../sanity/utils";
 import { handleError } from "./client-utils";
 
-import SanityLink from "../components/sanity-link";
 
 import { GridOverlay } from "../components/grid-overlay";
 import { Footer } from "../components/footer/footer";
+import { Header } from "../components/header/header";
 import { CartProvider } from "./_cart/cart-context";
-import { LocalCart } from "./_cart/local-cart";
-import s from "./layout.module.css";
 
 /**
  * Generate metadata for the page.
@@ -94,41 +92,5 @@ export default async function RootLayout({
         </CartProvider>
       </body>
     </html>
-  );
-}
-
-export async function Header() {
-  const { data: settings } = await sanityFetch({
-    query: SETTINGS_QUERY,
-  });
-
-  const header = settings?.header;
-
-  return (
-    <header className={s.header}>
-      <div className={s.annoucementBar}>
-        {header?.announcementBar?.link?.url ? (
-          <SanityLink link={header?.announcementBar?.link}>
-            {header?.announcementBar?.content}
-          </SanityLink>
-        ) : (
-          <div>{header?.announcementBar?.content}</div>
-        )}
-      </div>
-      <nav className={s.nav}>
-        <ul role="list" className={s.menu}>
-          {header?.links?.map((link) => {
-            return (
-              <li key={link._key}>
-                <SanityLink link={link}>{link.label}</SanityLink>
-              </li>
-            );
-          })}
-          <li className={s.localCartButton}>
-            <LocalCart />
-          </li>
-        </ul>
-      </nav>
-    </header>
   );
 }
