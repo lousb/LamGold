@@ -22,24 +22,3 @@
   min-width: 50px;
   text-align: right;
 }
-
-.footer {
-  background: black;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  padding: var(--main-padding);
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-}
-
-.footer ul {
-  display: flex;
-  gap: var(--main-gap);
-
-  @media (max-width: 480px) {
-    flex-direction: column;
-    gap: calc(var(--main-gap) / 2);
-  }
-}

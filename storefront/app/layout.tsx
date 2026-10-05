@@ -12,12 +12,10 @@ import { HOME_QUERY, SETTINGS_QUERY } from "../data/sanity/queries";
 import { resolveOpenGraphImage } from "../sanity/utils";
 import { handleError } from "./client-utils";
 
-import Link from "next/link";
 import SanityLink from "../components/sanity-link";
-import { SanityImage } from "../components/sanity-image";
 
 import { GridOverlay } from "../components/grid-overlay";
-import Newsletter from "../components/newsletter";
+import { Footer } from "../components/footer/footer";
 import { CartProvider } from "./_cart/cart-context";
 import { LocalCart } from "./_cart/local-cart";
 import s from "./layout.module.css";
@@ -132,58 +130,5 @@ export async function Header() {
         </ul>
       </nav>
     </header>
-  );
-}
-
-export async function Footer() {
-  const { data: settings } = await sanityFetch({
-    query: SETTINGS_QUERY,
-  });
-
-  const footer = settings?.footer;
-
-  return (
-    <footer className={s.footer}>
-      {settings?.footerImage ? (
-        <div className="relative full-height">
-          <SanityImage image={settings.footerImage} />
-        </div>
-      ) : null}
-      <div className={s.footerColumns}>
-        <div>
-          <h3>Products</h3>
-          <ul role="list">
-            {footer?.productTypes?.map((type: string) => (
-              <li key={type}>
-                <Link href={`/products?type=${type}`}>
-                  {type.charAt(0).toUpperCase() + type.slice(1)}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h3>Info</h3>
-          <ul role="list">
-            {footer?.infoLinks?.map((link: any) => (
-              <li key={link._key}>
-                <SanityLink link={link}>{link.label}</SanityLink>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h3>Connect</h3>
-          <ul role="list">
-            {footer?.connectLinks?.map((link: any) => (
-              <li key={link._key}>
-                <SanityLink link={link}>{link.label}</SanityLink>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-      <Newsletter />
-    </footer>
   );
 }
