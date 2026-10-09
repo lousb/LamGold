@@ -64,13 +64,6 @@
   display: none;
 }
 
-/* Desktop product pages have no header in the design */
-@media (min-width: 768px) {
-  body:has([data-page="product"]) .header {
-    display: none;
-  }
-}
-
 @media (max-width: 767px) {
   .header {
     top: 16px;

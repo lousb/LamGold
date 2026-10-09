@@ -72,7 +72,7 @@ export async function generateMetadata(
 /**
  * Individual Product Page (Chain / Earring / Bracelet designs).
  *
- * Desktop (1920 x 1080, no header): three 8-column panels -
+ * Desktop (1920 x 1080): three 8-column panels -
  *   left: number, title and description centred, Add To Cart at the bottom
  *   centre: main image with thumbnails
  *   right: spec row centred, accordions + Add To Cart at the bottom

@@ -3,21 +3,14 @@
 @import url("./grid.css");
 
 :root {
-  /*
-   * Palette, from the Home / Product designs.
-   * Desktop: deep red ground with pink type (Home) or white type (Product).
-   * Mobile: black ground with white type and a white footer.
-   */
-  --lam-red: #190000;
-  --lam-pink: #ffe5e5;
-
-  --color-bg: var(--lam-red);
-  --color-text: var(--lam-pink);
+  /* Palette: black and white throughout */
+  --color-bg: #000;
+  --color-text: #fff;
   --color-text-muted: color-mix(in srgb, var(--color-text) 25%, var(--color-bg));
-  --color-button: var(--lam-pink);
-  --color-button-text: var(--lam-red);
-  --color-footer-bg: var(--lam-pink);
-  --color-footer-text: var(--lam-red);
+  --color-button: #fff;
+  --color-button-text: #000;
+  --color-footer-bg: #fff;
+  --color-footer-text: #000;
 
   --main-gap: 1ch;
   --main-padding: 0.5ch;
@@ -45,26 +38,10 @@
 
 @media (max-width: 767px) {
   :root {
-    --color-bg: #000;
-    --color-text: #fff;
-    --color-button: #fff;
-    --color-button-text: #000;
-    --color-footer-bg: #fff;
-    --color-footer-text: #000;
-
     /* Full width (20px margins), 3:4 */
     --panel-width: calc(100vw - 40px);
     --tile-ratio: 3 / 4;
     --tile-height: calc(var(--panel-width) * 4 / 3);
-  }
-}
-
-/* Product pages use white type on desktop */
-@media (min-width: 768px) {
-  body:has([data-page="product"]) {
-    --color-text: #fff;
-    --color-button: #fff;
-    --color-button-text: var(--lam-red);
   }
 }
 
