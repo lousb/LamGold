@@ -16,7 +16,7 @@ const capitalise = (value: string) =>
 /**
  * Desktop (Home design): fixed bar 20px from the top/left, 100vw - 40px wide,
  * product types / Custom / Index + Cart.
- * Mobile: just "Cart (0)" top right, plus "Back" on product pages.
+ * Mobile: just "Cart (0)" top right, plus "Back" on every page but Home.
  */
 export async function Header() {
   const { data: settings } = await sanityFetch({ query: SETTINGS_QUERY });

@@ -36,9 +36,10 @@ export const link = defineType({
       title: "URL",
       type: "url",
       hidden: ({ parent }) => parent?.linkType !== "href",
+      description: "Full URL, or a path on this site such as /karat-guide",
       validation: (rule) =>
         // Custom validation to ensure URL is provided if the link type is 'href'
-        rule.custom((value, context: any) => {
+        rule.uri({ allowRelative: true, scheme: ["http", "https", "mailto", "tel"] }).custom((value, context: any) => {
           if (context.parent?.linkType === "href" && !value) {
             return "URL is required when Link Type is URL";
           }
@@ -50,7 +51,7 @@ export const link = defineType({
       title: "Page",
       type: "reference",
       weak: true,
-      to: [{ type: "page" }],
+      to: [{ type: "page" }, { type: "infoPage" }],
       hidden: ({ parent }) => parent?.linkType !== "page",
       validation: (rule) =>
         // Custom validation to ensure page reference is provided if the link type is 'page'

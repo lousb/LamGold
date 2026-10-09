@@ -2,7 +2,7 @@
  * Header
  * Desktop: fixed bar 20px from top/left, 100vw - 40px wide, 31px tall.
  * Text starts at x 30 / 660 / 1290 in the 1920 frame.
- * Mobile: no bar - "Cart (0)" top right, "Back" top left on product pages.
+ * Mobile: no bar - "Cart (0)" top right, "Back" top left (not on Home).
  */
 
 .header {
@@ -85,7 +85,8 @@
     margin-left: auto;
   }
 
-  body:has([data-page="product"]) .back {
+  /* "Back" on every page except Home */
+  body:not(:has([data-page="home"])) .back {
     display: block;
   }
 }

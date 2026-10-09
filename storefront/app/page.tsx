@@ -25,7 +25,7 @@ export default async function Page() {
   // so it can be checked against the designs (Option+G for the grid).
   if (!hasContent && process.env.NODE_ENV === "development") {
     return (
-      <div className={s.home}>
+      <div className={s.home} data-page="home">
         <PageBuilder page={PLACEHOLDER_HOME} />
         <IndexSection products={sortForIndex(PLACEHOLDER_PRODUCTS)} />
       </div>
@@ -37,7 +37,7 @@ export default async function Page() {
   }
 
   return (
-    <div className={s.home}>
+    <div className={s.home} data-page="home">
       <PageBuilder page={home} />
       <IndexSection
         products={sortForIndex((indexProducts ?? []) as ProductCard[])}

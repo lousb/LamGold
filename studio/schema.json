@@ -882,6 +882,36 @@
   },
   {
     "type": "type",
+    "name": "infoPage.reference",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_ref": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          }
+        },
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "reference"
+          }
+        },
+        "_weak": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        }
+      },
+      "dereferencesTo": "infoPage"
+    }
+  },
+  {
+    "type": "type",
     "name": "collection.reference",
     "value": {
       "type": "object",
@@ -966,8 +996,17 @@
         "page": {
           "type": "objectAttribute",
           "value": {
-            "type": "inline",
-            "name": "page.reference"
+            "type": "union",
+            "of": [
+              {
+                "type": "inline",
+                "name": "page.reference"
+              },
+              {
+                "type": "inline",
+                "name": "infoPage.reference"
+              }
+            ]
           },
           "optional": true
         },
@@ -1000,69 +1039,6 @@
             "type": "boolean"
           },
           "optional": false
-        }
-      }
-    }
-  },
-  {
-    "name": "privacyPolicy",
-    "type": "type",
-    "value": {
-      "type": "object",
-      "attributes": {
-        "_type": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string",
-            "value": "privacyPolicy"
-          }
-        },
-        "heroDescription": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
-        },
-        "dataWeCollect": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "blockContent"
-          },
-          "optional": true
-        },
-        "legalBases": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "blockContent"
-          },
-          "optional": true
-        },
-        "howWeUseDataPersonal": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "blockContent"
-          },
-          "optional": true
-        },
-        "howWeUseDataCommercial": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "blockContent"
-          },
-          "optional": true
-        },
-        "dataRetention": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "blockContent"
-          },
-          "optional": true
         }
       }
     }
@@ -1833,6 +1809,186 @@
     }
   },
   {
+    "name": "infoPage",
+    "type": "document",
+    "attributes": {
+      "_id": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_type": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string",
+          "value": "infoPage"
+        }
+      },
+      "_createdAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_updatedAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_rev": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "title": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": false
+      },
+      "slug": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "slug"
+        },
+        "optional": false
+      },
+      "lastUpdated": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "intro": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "sections": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "object",
+            "attributes": {
+              "title": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "groups": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "array",
+                  "of": {
+                    "type": "object",
+                    "attributes": {
+                      "label": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "string"
+                        },
+                        "optional": true
+                      },
+                      "items": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "array",
+                          "of": {
+                            "type": "string"
+                          }
+                        },
+                        "optional": true
+                      },
+                      "_type": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "string",
+                          "value": "infoGroup"
+                        }
+                      }
+                    },
+                    "rest": {
+                      "type": "object",
+                      "attributes": {
+                        "_key": {
+                          "type": "objectAttribute",
+                          "value": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "optional": true
+              },
+              "_type": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string",
+                  "value": "infoSection"
+                }
+              }
+            },
+            "rest": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "optional": true
+      }
+    }
+  },
+  {
+    "name": "slug",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "slug"
+          }
+        },
+        "current": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "source": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
     "name": "collection",
     "type": "document",
     "attributes": {
@@ -1923,36 +2079,6 @@
     }
   },
   {
-    "name": "slug",
-    "type": "type",
-    "value": {
-      "type": "object",
-      "attributes": {
-        "_type": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string",
-            "value": "slug"
-          }
-        },
-        "current": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": false
-        },
-        "source": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
-        }
-      }
-    }
-  },
-  {
     "name": "necklaceSizeGuide",
     "type": "document",
     "attributes": {
@@ -1994,20 +2120,22 @@
         },
         "optional": true
       },
+      "steps": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
+        },
+        "optional": true
+      },
       "heroExcerpt": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
         "optional": true
-      },
-      "heroImage": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "inline",
-          "name": "picture"
-        },
-        "optional": false
       },
       "sizes": {
         "type": "objectAttribute",
@@ -2334,14 +2462,6 @@
           "type": "string"
         },
         "optional": false
-      },
-      "privacyPolicy": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "inline",
-          "name": "privacyPolicy"
-        },
-        "optional": true
       }
     }
   },

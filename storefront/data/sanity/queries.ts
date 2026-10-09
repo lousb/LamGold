@@ -268,3 +268,43 @@ export const ALL_PAGES_SLUGS = defineQuery(`
   *[_type == "page" && defined(slug.current)]
   {"slug": slug.current}
 `);
+
+// Information pages (Privacy Policy, Terms & Conditions, Shipping and Returns...)
+export const INFO_PAGE_QUERY = defineQuery(`
+  *[_type == "infoPage" && slug.current == $slug][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    lastUpdated,
+    intro,
+    sections[]{
+      _key,
+      title,
+      groups[]{ _key, label, items }
+    }
+  }
+`);
+
+export const ALL_INFO_PAGE_SLUGS = defineQuery(`
+  *[_type == "infoPage" && defined(slug.current)]{"slug": slug.current}
+`);
+
+export const KARAT_GUIDE_QUERY = defineQuery(`
+  *[_type == "karatGuide"][0]{
+    _id,
+    "heroImage": heroImage{ asset, crop, hotspot, alt },
+    heroDescription,
+    karatGuide
+  }
+`);
+
+export const NECKLACE_SIZE_GUIDE_QUERY = defineQuery(`
+  *[_type == "necklaceSizeGuide"][0]{
+    _id,
+    heroDescription,
+    steps,
+    heroExcerpt,
+    sizes
+  }
+`);

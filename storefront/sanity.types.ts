@@ -177,6 +177,13 @@ export type PageReference = {
   [internalGroqTypeReferenceTo]?: "page";
 };
 
+export type InfoPageReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "infoPage";
+};
+
 export type CollectionReference = {
   _ref: string;
   _type: "reference";
@@ -188,21 +195,11 @@ export type Link = {
   _type: "link";
   linkType: "href" | "home" | "plp" | "page" | "product" | "collection";
   href?: string;
-  page?: PageReference;
+  page?: PageReference | InfoPageReference;
   product?: ProductReference;
   collection?: CollectionReference;
   label?: string;
   openInNewTab: boolean;
-};
-
-export type PrivacyPolicy = {
-  _type: "privacyPolicy";
-  heroDescription?: string;
-  dataWeCollect?: BlockContent;
-  legalBases?: BlockContent;
-  howWeUseDataPersonal?: BlockContent;
-  howWeUseDataCommercial?: BlockContent;
-  dataRetention?: BlockContent;
 };
 
 export type SanityImageAssetReference = {
@@ -323,6 +320,35 @@ export type ProductVariant = {
   store?: ShopifyProductVariant;
 };
 
+export type InfoPage = {
+  _id: string;
+  _type: "infoPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  lastUpdated?: string;
+  intro?: string;
+  sections?: Array<{
+    title: string;
+    groups?: Array<{
+      label?: string;
+      items?: Array<string>;
+      _type: "infoGroup";
+      _key: string;
+    }>;
+    _type: "infoSection";
+    _key: string;
+  }>;
+};
+
+export type Slug = {
+  _type: "slug";
+  current: string;
+  source?: string;
+};
+
 export type Collection = {
   _id: string;
   _type: "collection";
@@ -340,12 +366,6 @@ export type Collection = {
   store?: ShopifyCollection;
 };
 
-export type Slug = {
-  _type: "slug";
-  current: string;
-  source?: string;
-};
-
 export type NecklaceSizeGuide = {
   _id: string;
   _type: "necklaceSizeGuide";
@@ -353,8 +373,8 @@ export type NecklaceSizeGuide = {
   _updatedAt: string;
   _rev: string;
   heroDescription?: string;
+  steps?: Array<string>;
   heroExcerpt?: string;
-  heroImage: Picture;
   sizes?: {
     xs?: number;
     s?: number;
@@ -413,7 +433,6 @@ export type Settings = {
   footer: Footer;
   footerImage: Picture;
   metadataBase: string;
-  privacyPolicy?: PrivacyPolicy;
 };
 
 export type Page = {
@@ -620,9 +639,9 @@ export type AllSanitySchemaTypes =
   | Footer
   | Header
   | PageReference
+  | InfoPageReference
   | CollectionReference
   | Link
-  | PrivacyPolicy
   | SanityImageAssetReference
   | PageSeo
   | CustomPieceSection
@@ -633,8 +652,9 @@ export type AllSanitySchemaTypes =
   | EditorialBlock
   | BlockContent
   | ProductVariant
-  | Collection
+  | InfoPage
   | Slug
+  | Collection
   | NecklaceSizeGuide
   | KaratGuide
   | Home
@@ -678,7 +698,7 @@ export type SETTINGS_QUERY_RESULT = {
         _key: string;
         linkType: "collection" | "home" | "href" | "page" | "plp" | "product";
         url: string | "/" | "/products" | null;
-        label: string | "All Products" | "Home" | "Link" | null;
+        label: "All Products" | "Home" | "Link" | null | string;
         openInNewTab: boolean;
       } | null;
     } | null;
@@ -687,7 +707,7 @@ export type SETTINGS_QUERY_RESULT = {
       _key: string;
       linkType: "collection" | "home" | "href" | "page" | "plp" | "product";
       url: string | "/" | "/products" | null;
-      label: string | "All Products" | "Home" | "Link" | null;
+      label: "All Products" | "Home" | "Link" | null | string;
       openInNewTab: boolean;
     }> | null;
   };
@@ -699,7 +719,7 @@ export type SETTINGS_QUERY_RESULT = {
       _key: string;
       linkType: "collection" | "home" | "href" | "page" | "plp" | "product";
       url: string | "/" | "/products" | null;
-      label: string | "All Products" | "Home" | "Link" | null;
+      label: "All Products" | "Home" | "Link" | null | string;
       openInNewTab: boolean;
     }> | null;
     connectLinks: Array<{
@@ -707,7 +727,7 @@ export type SETTINGS_QUERY_RESULT = {
       _key: string;
       linkType: "collection" | "home" | "href" | "page" | "plp" | "product";
       url: string | "/" | "/products" | null;
-      label: string | "All Products" | "Home" | "Link" | null;
+      label: "All Products" | "Home" | "Link" | null | string;
       openInNewTab: boolean;
     }> | null;
   };
@@ -1154,6 +1174,71 @@ export type ALL_PAGES_SLUGS_RESULT = Array<{
   slug: string;
 }>;
 
+// Source: data/sanity/queries.ts
+// Variable: INFO_PAGE_QUERY
+// Query: *[_type == "infoPage" && slug.current == $slug][0]{    _id,    _type,    title,    "slug": slug.current,    lastUpdated,    intro,    sections[]{      _key,      title,      groups[]{ _key, label, items }    }  }
+export type INFO_PAGE_QUERY_RESULT = {
+  _id: string;
+  _type: "infoPage";
+  title: string;
+  slug: string;
+  lastUpdated: string | null;
+  intro: string | null;
+  sections: Array<{
+    _key: string;
+    title: string;
+    groups: Array<{
+      _key: string;
+      label: string | null;
+      items: Array<string> | null;
+    }> | null;
+  }> | null;
+} | null;
+
+// Source: data/sanity/queries.ts
+// Variable: ALL_INFO_PAGE_SLUGS
+// Query: *[_type == "infoPage" && defined(slug.current)]{"slug": slug.current}
+export type ALL_INFO_PAGE_SLUGS_RESULT = Array<{
+  slug: string;
+}>;
+
+// Source: data/sanity/queries.ts
+// Variable: KARAT_GUIDE_QUERY
+// Query: *[_type == "karatGuide"][0]{    _id,    "heroImage": heroImage{ asset, crop, hotspot, alt },    heroDescription,    karatGuide  }
+export type KARAT_GUIDE_QUERY_RESULT = {
+  _id: string;
+  heroImage: {
+    asset: SanityImageAssetReference | null;
+    crop: SanityImageCrop | null;
+    hotspot: SanityImageHotspot | null;
+    alt: string | null;
+  };
+  heroDescription: string | null;
+  karatGuide: {
+    karat24?: string;
+    karat18?: string;
+    karat14?: string;
+    karat9?: string;
+  } | null;
+} | null;
+
+// Source: data/sanity/queries.ts
+// Variable: NECKLACE_SIZE_GUIDE_QUERY
+// Query: *[_type == "necklaceSizeGuide"][0]{    _id,    heroDescription,    steps,    heroExcerpt,    sizes  }
+export type NECKLACE_SIZE_GUIDE_QUERY_RESULT = {
+  _id: string;
+  heroDescription: string | null;
+  steps: Array<string> | null;
+  heroExcerpt: string | null;
+  sizes: {
+    xs?: number;
+    s?: number;
+    m?: number;
+    l?: number;
+    xl?: number;
+  } | null;
+} | null;
+
 // Query TypeMap
 declare global {
   interface SanityQueries {
@@ -1171,6 +1256,10 @@ declare global {
     '\n  *[_type == "product" && defined(store.slug.current)]\n  {"slug": store.slug.current}\n': ALL_PRODUCT_PAGES_SLUGS_RESULT;
     '\n  *[_type == "collection" && defined(store.slug.current)]\n  {"slug": store.slug.current}\n': ALL_COLLECTION_PAGES_SLUGS_RESULT;
     '\n  *[_type == "page" && defined(slug.current)]\n  {"slug": slug.current}\n': ALL_PAGES_SLUGS_RESULT;
+    '\n  *[_type == "infoPage" && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    lastUpdated,\n    intro,\n    sections[]{\n      _key,\n      title,\n      groups[]{ _key, label, items }\n    }\n  }\n': INFO_PAGE_QUERY_RESULT;
+    '\n  *[_type == "infoPage" && defined(slug.current)]{"slug": slug.current}\n': ALL_INFO_PAGE_SLUGS_RESULT;
+    '\n  *[_type == "karatGuide"][0]{\n    _id,\n    "heroImage": heroImage{ asset, crop, hotspot, alt },\n    heroDescription,\n    karatGuide\n  }\n': KARAT_GUIDE_QUERY_RESULT;
+    '\n  *[_type == "necklaceSizeGuide"][0]{\n    _id,\n    heroDescription,\n    steps,\n    heroExcerpt,\n    sizes\n  }\n': NECKLACE_SIZE_GUIDE_QUERY_RESULT;
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too

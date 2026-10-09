@@ -1,6 +1,7 @@
 import { AsteriskIcon } from "@sanity/icons/Asterisk";
 import { CubeIcon } from "@sanity/icons/Cube";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
+import { InfoOutlineIcon } from "@sanity/icons/InfoOutline";
 
 import type { StructureResolver } from "sanity/structure";
 import { singletonListItem, SINGLETONS } from "./singletons";
@@ -17,6 +18,9 @@ export const structure: StructureResolver = (S, _) =>
     .items([
       singletonListItem(S, SINGLETONS.home),
       S.documentTypeListItem("page").title("Pages").icon(DocumentTextIcon),
+      S.documentTypeListItem("infoPage")
+        .title("Information pages")
+        .icon(InfoOutlineIcon),
       S.divider(),
       S.documentTypeListItem("collection").title("Collections").icon(CubeIcon),
       S.documentTypeListItem("product").title("Products").icon(AsteriskIcon),

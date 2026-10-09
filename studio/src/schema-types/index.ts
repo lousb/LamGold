@@ -1,6 +1,7 @@
 // Export an array of all the schema types.  This is used in the Sanity Studio configuration. https://www.sanity.io/docs/schema-types
 
 import { collection } from "./documents/collection";
+import { infoPage } from "./documents/info-page";
 import { page } from "./documents/page";
 import { product } from "./documents/product";
 import { productVariant } from "./documents/product-variant";
@@ -16,7 +17,6 @@ import { footer } from "./objects/global/footer";
 import { header } from "./objects/global/header";
 import { link } from "./objects/global/link";
 import { pageSeo } from "./objects/global/page-seo";
-import { privacyPolicy } from "./objects/global/privacy-policy";
 import { inventory } from "./objects/shopify/inventory";
 import { option } from "./objects/shopify/option";
 import { placeholderString } from "./objects/shopify/placeholder-string";
@@ -41,6 +41,7 @@ export const schemaTypes = [
   // Documents
   collection,
   page,
+  infoPage,
   product,
   productVariant,
   // Objects
@@ -55,7 +56,6 @@ export const schemaTypes = [
   customPieceSection,
   /// Global
   pageSeo,
-  privacyPolicy,
   link,
   header,
   footer,

@@ -1,5 +1,4 @@
 import { CogIcon } from "@sanity/icons/Cog";
-import { LockIcon } from "@sanity/icons/Lock";
 import { defineField, defineType } from "sanity";
 
 /**
@@ -13,7 +12,6 @@ export const settings = defineType({
   icon: CogIcon,
   groups: [
     { name: "general", title: "General", icon: CogIcon, default: true },
-    { name: "privacyPolicy", title: "Privacy Policy", icon: LockIcon },
   ],
   fields: [
     defineField({
@@ -76,12 +74,6 @@ export const settings = defineType({
           </a>
         </span>
       ),
-    }),
-    defineField({
-      name: "privacyPolicy",
-      title: "Privacy Policy",
-      type: "privacyPolicy",
-      group: "privacyPolicy",
     }),
   ],
   preview: {

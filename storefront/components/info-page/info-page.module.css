@@ -1,0 +1,165 @@
+/*
+ * Information Page
+ * Desktop (1920 frame): intro cols 1-8, sections cols 9-16, title cols
+ * 21-24. Sections: number col 9, title col 10, labels cols 10-12, lettered
+ * list from col 13 (text 24px in). 18px lines, 21px for titles, a rule
+ * under each section (7px above / 6px below the text).
+ * Content starts under the fixed header.
+ */
+
+.layout {
+  align-items: start;
+  padding-top: 61px;
+  line-height: var(--line-height-tight);
+}
+
+/* Stays in view while the sections scroll */
+.introColumn {
+  grid-column: 1 / 9;
+  grid-row: 1;
+  align-self: stretch;
+}
+
+.intro {
+  position: sticky;
+  top: calc(50vh - 77px);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.meta {
+  grid-column: 21 / -1;
+  grid-row: 1;
+  align-self: stretch;
+}
+
+.metaInner {
+  position: sticky;
+  top: calc(50vh + 373px);
+}
+
+.title {
+  font: inherit;
+}
+
+.sections {
+  grid-column: 9 / 17;
+  grid-row: 1;
+}
+
+.section {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  column-gap: var(--grid-gutter);
+  padding: 7px 0 6px;
+  border-bottom: 1px solid currentColor;
+}
+
+.sectionTitle {
+  display: contents;
+  font: inherit;
+}
+
+.sectionTitle > span {
+  line-height: var(--line-height);
+}
+
+.number {
+  grid-column: 1;
+}
+
+.sectionTitle > span:last-child {
+  grid-column: 2 / -1;
+}
+
+.mobileNumber {
+  display: none;
+}
+
+.group {
+  display: grid;
+  grid-column: 2 / -1;
+  grid-template-columns: subgrid;
+}
+
+.group + .group {
+  margin-top: 3px;
+}
+
+.label {
+  grid-column: 1 / 4;
+}
+
+.items {
+  grid-column: 4 / -1;
+  margin: 0;
+  padding: 0 0 0 24px;
+  list-style: lower-alpha;
+}
+
+.items li::marker {
+  content: counter(list-item, lower-alpha) ". ";
+}
+
+/* Mobile: title + date (col 3), intro, sections stacked; lists from col 3 */
+@media (max-width: 767px) {
+  .layout {
+    padding-top: 55.8px;
+    padding-bottom: 21px;
+  }
+
+  .meta {
+    grid-column: 3 / -1;
+    grid-row: 1;
+  }
+
+  .metaInner {
+    position: static;
+  }
+
+  .introColumn {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-top: 33px;
+  }
+
+  .intro {
+    position: static;
+  }
+
+  .sections {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin-top: 33px;
+  }
+
+  .section:first-child {
+    padding-top: 0;
+  }
+
+  .desktopNumber {
+    display: none;
+  }
+
+  .mobileNumber {
+    display: inline;
+  }
+
+  .group {
+    grid-column: 2 / -1;
+  }
+
+  .label {
+    grid-column: 1 / -1;
+    margin-bottom: 3px;
+  }
+
+  .items {
+    grid-column: 2 / -1;
+  }
+
+  /* No LAMGOLD band on mobile in the design */
+  .band {
+    display: none;
+  }
+}

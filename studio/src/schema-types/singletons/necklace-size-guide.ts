@@ -22,20 +22,24 @@ export const necklaceSizeGuide = defineType({
       rows: 4,
     }),
     defineField({
+      name: "steps",
+      title: "Steps",
+      description: "Numbered 01., 02., ... under the description.",
+      type: "array",
+      of: [{ type: "text", rows: 2 }],
+    }),
+    defineField({
       name: "heroExcerpt",
       title: "Hero excerpt",
+      description: "Shown under the steps, after a rule.",
       type: "text",
       rows: 2,
     }),
     defineField({
-      name: "heroImage",
-      title: "Hero image",
-      type: "picture",
-    }),
-    defineField({
       name: "sizes",
       title: "Sizes",
-      description: "Necklace lengths in centimetres.",
+      description:
+        "Necklace lengths in centimetres. Inches are worked out on the site; the diagram labels use these values.",
       type: "object",
       options: { collapsible: false, columns: 5 },
       fields: SIZES.map(({ name, title }) =>
