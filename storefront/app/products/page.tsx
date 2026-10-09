@@ -1,106 +1,70 @@
-import NextImage from "next/image";
-import NextLink from "next/link";
-import { notFound } from "next/navigation";
-import Price from "../../components/price";
+import type { Metadata } from "next";
+
+import { ProductTypeSection } from "../../components/product-type-section";
+import {
+  PLACEHOLDER_PRODUCTS,
+  ProductCard,
+  sortForIndex,
+} from "../../data/products";
 import { sanityFetch } from "../../data/sanity";
-import { ALL_PRODUCTS_QUERY, PRODUCTS_BY_TYPE_QUERY } from "../../data/sanity/queries";
-import { getProducts } from "../../data/shopify";
+import { INDEX_PRODUCTS_QUERY } from "../../data/sanity/queries";
+import s from "../page.module.css";
 
 type Props = {
   searchParams: Promise<{ type?: string }>;
 };
 
+const capitalise = (value: string) =>
+  value.charAt(0).toUpperCase() + value.slice(1);
+
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { type } = await props.searchParams;
+  return { title: type ? capitalise(type) : "All Products" };
+}
+
 /**
- * All Products page. Reached directly for SEO, or from the footer's product
- * type links (?type=necklaces etc.), in which case it's filtered to that
- * LamGold product type instead of showing everything.
+ * All Products. Reached from the header / footer product type links
+ * (?type=chains etc.), which filter it to one type; without a type it lists
+ * everything, grouped by type. Same tiles and LAMGOLD bands as Home.
  */
 export default async function Page(props: Props) {
   const { type } = await props.searchParams;
+  const { data } = await sanityFetch({ query: INDEX_PRODUCTS_QUERY });
 
-  if (type) {
-    const { data: products } = await sanityFetch({
-      query: PRODUCTS_BY_TYPE_QUERY,
-      params: { type },
-    });
-
-    if (!products?.length) return notFound();
-
-    return (
-      <div className="block-space">
-        <div className="main-grid">
-          {products.map((product: any) => (
-            <article key={product._id}>
-              <NextLink href={`/products/${product.store?.slug?.current}`}>
-                <figure className="product-card">
-                  {product.store?.previewImageUrl ? (
-                    <NextImage
-                      src={product.store.previewImageUrl}
-                      fill
-                      alt={`Image for product: ${product.store?.title}`}
-                      objectFit="cover"
-                      sizes="33vw"
-                    />
-                  ) : null}
-                </figure>
-                <figcaption>{product.store?.title}</figcaption>
-                {product.store?.priceRange ? (
-                  <p>
-                    <Price
-                      amount={product.store.priceRange.minVariantPrice.amount}
-                      currencyCode={
-                        product.store.priceRange.minVariantPrice.currencyCode
-                      }
-                    />
-                  </p>
-                ) : null}
-              </NextLink>
-            </article>
-          ))}
-        </div>
-      </div>
-    );
+  let products = (data ?? []) as ProductCard[];
+  if (!products.length && process.env.NODE_ENV === "development") {
+    products = PLACEHOLDER_PRODUCTS;
   }
+  products = sortForIndex(products);
 
-  // get the syncTags from lcapi so we can revalidate the shopify queries
-  const { tags } = await sanityFetch({ query: ALL_PRODUCTS_QUERY });
+  // One section per type, in Index order
+  const types = type
+    ? [type]
+    : [...new Set(products.map((p) => p.type).filter(Boolean))] as string[];
 
-  const products = await getProducts({ tags });
-
-  if (!products) {
-    return notFound();
-  }
+  const sections = types
+    .map((t) => ({ type: t, products: products.filter((p) => p.type === t) }))
+    .filter((section) => section.products.length);
 
   return (
-    <div className="block-space">
-      <div className="main-grid">
-        {products.map((product) => {
-          return (
-            <article key={product.id}>
-              <NextLink href={`/products/${product.handle}`}>
-                <figure className="product-card">
-                  <NextImage
-                    src={product.featuredImage.url || ""}
-                    fill
-                    alt={`Image for product: ${product.title}`}
-                    objectFit="cover"
-                    sizes={"33vw"}
-                  />
-                </figure>
-                <figcaption>{product.title}</figcaption>
-                <p>
-                  <Price
-                    amount={product.priceRange.maxVariantPrice.amount}
-                    currencyCode={
-                      product.priceRange.maxVariantPrice.currencyCode
-                    }
-                  />
-                </p>
-              </NextLink>
-            </article>
-          );
-        })}
-      </div>
+    <div className={s.home}>
+      {sections.length ? (
+        sections.map((section, i) => (
+          <ProductTypeSection
+            key={section.type}
+            index={i}
+            block={{
+              _type: "productTypeSection",
+              _key: section.type,
+              heading: capitalise(section.type),
+              productType: section.type,
+              products: section.products,
+            }}
+          />
+        ))
+      ) : (
+        <p className={s.empty}>No {type ?? "products"} yet.</p>
+      )}
     </div>
   );
 }

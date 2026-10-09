@@ -6,13 +6,15 @@
     "predev": "concurrently \"npm run predev --workspace=storefront\" \"npm run predev --workspace=studio\"",
     "dev": "concurrently \"npm run dev --workspace=storefront\" \"npm run dev --workspace=studio\"",
     "dev:storefront": "npm run dev --workspace=storefront",
-    "dev:studio": "npm run dev --workspace=studio"
+    "dev:studio": "npm run dev --workspace=studio",
+    "content:push": "node content/push.mjs"
   },
   "workspaces": [
     "studio",
     "storefront"
   ],
   "devDependencies": {
-    "concurrently": "^10.0.5"
+    "concurrently": "^10.0.5",
+    "exceljs": "^4.4.0"
   }
 }

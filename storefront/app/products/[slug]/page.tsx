@@ -114,7 +114,8 @@ export default async function Page(props: Props) {
   // Shopify supplies the variants for the cart. Keep the page up if the
   // Storefront API isn't reachable (e.g. token not set yet).
   let shopifyProduct: Product | null = null;
-  if (!productPage.placeholder) {
+  // Skipped until the store is connected (no Storefront token set)
+  if (!productPage.placeholder && process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
     try {
       shopifyProduct =
         (await getProduct({ handle: params.slug, tags })) ?? null;
@@ -144,6 +145,15 @@ export default async function Page(props: Props) {
     );
   }
   const [karat, thickness, length, weight] = specRow(productPage);
+  const demo =
+    productPage.slug && productPage.price
+      ? {
+          handle: productPage.slug,
+          title: productPage.title ?? "",
+          price: productPage.price,
+          image: images[0]?.src,
+        }
+      : null;
 
   const productJsonLd = shopifyProduct
     ? {
@@ -184,6 +194,7 @@ export default async function Page(props: Props) {
           ) : null}
           <CartButton
             product={shopifyProduct}
+            demo={demo}
             price={price}
             className={s.leftButton}
           />
@@ -221,6 +232,7 @@ export default async function Page(props: Props) {
             </div>
             <CartButton
               product={shopifyProduct}
+              demo={demo}
               price={price}
               className={s.rightButton}
             />

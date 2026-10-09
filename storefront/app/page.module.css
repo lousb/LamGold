@@ -8,3 +8,7 @@
     padding-top: 79.5px;
   }
 }
+
+.empty {
+  padding: 61px var(--grid-margin) 200px;
+}

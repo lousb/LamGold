@@ -157,6 +157,10 @@ export function CartFooter() {
   const { cart } = useCart();
   const [pending, setPending] = useState(false);
   const empty = !cart?.lines.length;
+  // Demo lines (presentation mode, before Shopify) can't go to checkout
+  const demo = !!cart?.lines.some((line) =>
+    line.merchandise.id.startsWith("demo-"),
+  );
 
   return (
     <>
@@ -164,7 +168,8 @@ export function CartFooter() {
       <button
         type="button"
         className={panel.bar}
-        disabled={empty || pending}
+        disabled={empty || pending || demo}
+        title={demo ? "Checkout opens once the store is connected" : undefined}
         onClick={() => {
           if (!cart) return;
           setPending(true);
