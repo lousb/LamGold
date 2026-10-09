@@ -73,21 +73,7 @@ const homePageBuilderFields = /* groq */ `
   "shippingReturnsWarranties": select(
     _type == "customPieceSection" => *[_type == "settings"][0].shippingReturnsWarranties
   ),
-  "cta": cta{
-    _type,
-    _key,
-    linkType,
-    "url": select(
-      linkType == 'href' => href,
-      linkType == 'home' => '/',
-      linkType == 'plp' => '/products',
-      linkType == 'page' => '/' + page->slug.current,
-      linkType == 'product' => '/products/' + product->store.slug.current,
-      linkType == 'collection' => '/collections/' + collection->store.slug.current,
-    ),
-    label,
-    openInNewTab
-  }
+  buttonLabel
 `;
 
 const linkFields = /* groq */ `
@@ -132,6 +118,7 @@ export const SETTINGS_QUERY = defineQuery(`
     "title": coalesce(title, "Untitled Store"),
     metadataBase,
     shippingReturnsWarranties,
+    customEnquiryIntro,
     header{
       _type,
       announcementBar{

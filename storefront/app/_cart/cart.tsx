@@ -1,263 +1,179 @@
 "use client";
 
-import Image from "next/image";
+import NextImage from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useFormStatus } from "react-dom";
-import Price from "../../components/price";
-import { DEFAULT_OPTION } from "../../shopify/constants";
+import { useState } from "react";
+
+import { useOverlay } from "../../components/overlays/overlay-context";
+import panel from "../../components/overlays/panel.module.css";
 import { CartItem } from "../../shopify/types";
-import { createUrl } from "../../shopify/utils";
-import { redirectToCheckout, saveCart } from "./cart-actions";
+import { redirectToCheckout } from "./cart-actions";
 import { useCart } from "./cart-context";
 import s from "./cart.module.css";
 
-type MerchandiseSearchParams = {
-  [key: string]: string;
+/** What the cart needs to know about each product, keyed by Shopify handle */
+export type CartProductInfo = {
+  title?: string | null;
+  karat?: string;
+  details?: string[];
+  images: { key: string; src: string; alt: string }[];
 };
 
-export function Cart() {
-  const { cart, updateCartItem } = useCart();
-  const [isOpen, setIsOpen] = useState(false);
-  const openCart = () => setIsOpen(true);
-  const closeCart = () => setIsOpen(false);
+const formatAmount = (amount: string | number) => {
+  const n = Number(amount);
+  return `AU$ ${Number.isInteger(n) ? n : n.toFixed(2)}`;
+};
 
-  useEffect(() => {
-    if (cart) saveCart(cart);
-  }, [cart]);
+/** "Thick Hoop (Small)" -> ["Thick Hoop", "Small"] */
+const splitTitle = (title: string) => {
+  const match = title.match(/^(.*?)\s*\((.+)\)\s*$/);
+  return match ? [match[1], match[2]] : [title, null];
+};
+
+/** "Cart (n)" in the header - opens the cart panel */
+export function CartToggle() {
+  const { cart } = useCart();
+  const { openOverlay } = useOverlay();
+
+  return (
+    <button
+      type="button"
+      aria-haspopup="dialog"
+      onClick={() => openOverlay("cart")}
+    >
+      Cart ({cart?.totalQuantity ?? 0})
+    </button>
+  );
+}
+
+/** Cart overlay contents */
+export function CartItems({
+  products,
+}: {
+  products: Record<string, CartProductInfo>;
+}) {
+  const { cart, updateCartItem } = useCart();
+  const { closeOverlay } = useOverlay();
+  const lines = cart?.lines ?? [];
+
+  if (!lines.length) {
+    return <p className={s.empty}>Your cart is empty.</p>;
+  }
+
+  return (
+    <ul role="list" className={s.items}>
+      {lines.map((item) => (
+        <CartLine
+          key={item.merchandise.id}
+          item={item}
+          info={products[item.merchandise.product.handle]}
+          onRemove={() => updateCartItem(item.merchandise.id, "delete")}
+          onNavigate={closeOverlay}
+        />
+      ))}
+    </ul>
+  );
+}
+
+function CartLine({
+  item,
+  info,
+  onRemove,
+  onNavigate,
+}: {
+  item: CartItem;
+  info?: CartProductInfo;
+  onRemove: () => void;
+  onNavigate: () => void;
+}) {
+  const { merchandise } = item;
+  const fallback = merchandise.variantImage ?? merchandise.product.featuredImage;
+  const images = info?.images.length
+    ? info.images
+    : fallback
+      ? [{ key: fallback.url, src: fallback.url, alt: fallback.altText ?? "" }]
+      : [];
+  const [name, variant] = splitTitle(info?.title || merchandise.product.title);
+  const href = `/products/${merchandise.product.handle}`;
+  const karat = info?.karat;
+  const details = info?.details?.filter(Boolean) ?? [];
+  const price = formatAmount(item.cost.totalAmount.amount);
+  const [currency, amount] = price.split(" ");
+
+  return (
+    <li className={s.item}>
+      <h3 className={s.title}>
+        <Link href={href} onClick={onNavigate}>
+          {variant ? (
+            <>
+              {name},<span className={s.variant}> {variant}</span>
+            </>
+          ) : (
+            name
+          )}
+        </Link>
+        {item.quantity > 1 ? ` × ${item.quantity}` : null}
+      </h3>
+
+      <button type="button" className={s.remove} onClick={onRemove}>
+        Remove
+      </button>
+
+      <ul role="list" className={s.thumbnails}>
+        {images.length ? (
+          images.map((image) => (
+            <li key={image.key} className={s.thumbnail}>
+              <NextImage src={image.src} alt="" fill sizes="60px" />
+            </li>
+          ))
+        ) : (
+          <li className={s.thumbnail} />
+        )}
+      </ul>
+
+      {/* Desktop: "Gold, 9K," / "1mm, 42cm, 1.4g". Mobile: one value per column */}
+      <p className={s.details}>
+        <span className={s.material}>Gold,</span>{" "}
+        {karat ? <span className={s.karat}>{karat},</span> : null}
+        <br className={s.desktopBreak} />
+        {details.map((value, i) => (
+          <span key={i} className={s[`detail${i}`]}>
+            {value}
+            {i < details.length - 1 ? ", " : ""}
+          </span>
+        ))}
+      </p>
+
+      <p className={s.price}>
+        <span className={s.currency}>{currency}</span>{" "}
+        <span className={s.amount}>{amount}</span>
+      </p>
+    </li>
+  );
+}
+
+/** Mobile note + "Continue To Checkout ... AU$ 2340" bar */
+export function CartFooter() {
+  const { cart } = useCart();
+  const [pending, setPending] = useState(false);
+  const empty = !cart?.lines.length;
 
   return (
     <>
-      {!isOpen ? (
-        <button
-          aria-label="Open cart"
-          onClick={openCart}
-          className={s.cartButton}
-        >
-          <OpenCart quantity={cart?.totalQuantity} />
-        </button>
-      ) : (
-        <button
-          aria-label="Close cart"
-          onClick={closeCart}
-          className={s.cartButton}
-        >
-          <CloseCart />
-        </button>
-      )}
-      {isOpen && (
-        <aside className={s.cart}>
-          {!cart || cart.lines.length === 0 ? (
-            <div>
-              <p>Your cart is empty.</p>
-            </div>
-          ) : (
-            <div>
-              <ul className="main-grid">
-                {cart.lines
-                  .sort((a, b) =>
-                    a.merchandise.product.title.localeCompare(
-                      b.merchandise.product.title,
-                    ),
-                  )
-                  .map((item, i) => {
-                    const merchandiseSearchParams =
-                      {} as MerchandiseSearchParams;
-
-                    item.merchandise.selectedOptions.forEach(
-                      ({ name, value }) => {
-                        if (value !== DEFAULT_OPTION) {
-                          merchandiseSearchParams[name.toLowerCase()] = value;
-                        }
-                      },
-                    );
-
-                    const merchandiseUrl = createUrl(
-                      `/product/${item.merchandise.product.handle}`,
-                      new URLSearchParams(merchandiseSearchParams),
-                    );
-
-                    const cartImage =
-                      item.merchandise.variantImage ??
-                      item.merchandise.product.featuredImage;
-
-                    return (
-                      <li key={i}>
-                        <div>
-                          <div>
-                            <DeleteItemButton
-                              item={item}
-                              optimisticUpdate={updateCartItem}
-                            />
-                          </div>
-                          <div>
-                            <div>
-                              <Image
-                                width={124}
-                                height={124}
-                                alt={
-                                  cartImage.altText ||
-                                  item.merchandise.product.title
-                                }
-                                src={cartImage.url}
-                              />
-                            </div>
-                            <Link href={merchandiseUrl} onClick={closeCart}>
-                              <div>
-                                <span>{item.merchandise.product.title}</span>
-                                {item.merchandise.title !== DEFAULT_OPTION ? (
-                                  <p>{item.merchandise.title}</p>
-                                ) : null}
-                              </div>
-                            </Link>
-                          </div>
-                          <div>
-                            <p>
-                              <Price
-                                amount={item.cost.totalAmount.amount}
-                                currencyCode={
-                                  item.cost.totalAmount.currencyCode
-                                }
-                              />
-                            </p>
-                            <div className="flex">
-                              <EditItemQuantityButton
-                                item={item}
-                                type="minus"
-                                optimisticUpdate={updateCartItem}
-                              />
-                              <p>
-                                <span>{item.quantity}</span>
-                              </p>
-                              <EditItemQuantityButton
-                                item={item}
-                                type="plus"
-                                optimisticUpdate={updateCartItem}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    );
-                  })}
-              </ul>
-              <div className="total-checkout">
-                <div>
-                  <div>
-                    <p>Taxes</p>
-                    <p>
-                      <Price
-                        amount={cart.cost.totalTaxAmount.amount}
-                        currencyCode={cart.cost.totalTaxAmount.currencyCode}
-                      />
-                    </p>
-                  </div>
-                  <div>
-                    <p>Shipping calculated at checkout</p>
-                  </div>
-                  <div>
-                    <p>Total</p>
-                    <p>
-                      <Price
-                        amount={cart.cost.totalAmount.amount}
-                        currencyCode={cart.cost.totalAmount.currencyCode}
-                      />
-                    </p>
-                  </div>
-                </div>
-                <form
-                  action={() => {
-                    redirectToCheckout(cart);
-                  }}
-                  className="block-space"
-                >
-                  <CheckoutButton />
-                </form>
-              </div>
-            </div>
-          )}
-        </aside>
-      )}
-    </>
-  );
-}
-
-function CheckoutButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <button type="submit" disabled={pending}>
-      {pending ? "..." : "Proceed to Checkout"}
-    </button>
-  );
-}
-
-function OpenCart({ quantity }: { quantity?: number }) {
-  return (
-    <span>Cart ({quantity ?? 0})</span>
-  );
-}
-
-function CloseCart() {
-  return <span>Close</span>;
-}
-
-function DeleteItemButton({
-  item,
-  optimisticUpdate,
-}: {
-  item: CartItem;
-  optimisticUpdate: any;
-}) {
-  const merchandiseId = item.merchandise.id;
-
-  return (
-    <form
-      action={() => {
-        optimisticUpdate(merchandiseId, "delete");
-      }}
-    >
-      <button type="submit" aria-label="Remove cart item">
-        ×
+      <p className={s.note}>Shipping &amp; taxes calculated at checkout.</p>
+      <button
+        type="button"
+        className={panel.bar}
+        disabled={empty || pending}
+        onClick={() => {
+          if (!cart) return;
+          setPending(true);
+          redirectToCheckout(cart);
+        }}
+      >
+        <span>{pending ? "Redirecting…" : "Continue To Checkout"}</span>
+        <span>{formatAmount(cart?.cost.totalAmount.amount ?? 0)}</span>
       </button>
-    </form>
-  );
-}
-
-function EditItemQuantityButton({
-  item,
-  type,
-  optimisticUpdate,
-}: {
-  item: CartItem;
-  type: "plus" | "minus";
-  optimisticUpdate: any;
-}) {
-  const payload = {
-    merchandiseId: item.merchandise.id,
-    quantity: type === "plus" ? item.quantity + 1 : item.quantity - 1,
-  };
-
-  return (
-    <form
-      action={() => {
-        optimisticUpdate(payload.merchandiseId, type);
-      }}
-    >
-      <SubmitButton type={type} />
-    </form>
-  );
-}
-
-function SubmitButton({ type }: { type: "plus" | "minus" }) {
-  return (
-    <button
-      type="submit"
-      aria-label={
-        type === "plus" ? "Increase item quantity" : "Reduce item quantity"
-      }
-    >
-      {type === "plus" ? "+" : "−"}
-    </button>
+    </>
   );
 }

@@ -1,11 +1,16 @@
 "use client";
 
 import dynamic from "next/dynamic";
-const Cart = dynamic(() => import("./cart").then((mod) => mod.Cart), {
-  ssr: false,
-  loading: () => <span>Cart (0)</span>,
-});
+
+// Cart lives in localStorage, so the count renders on the client only
+const CartToggle = dynamic(
+  () => import("./cart").then((mod) => mod.CartToggle),
+  {
+    ssr: false,
+    loading: () => <span>Cart (0)</span>,
+  },
+);
 
 export function LocalCart() {
-  return <Cart />;
+  return <CartToggle />;
 }

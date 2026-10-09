@@ -80,10 +80,11 @@ export const customPieceSection = defineType({
       type: "string",
     }),
     defineField({
-      name: "cta",
-      title: "Enquiry button",
-      description: "Button label defaults to “Request Custom Piece”.",
-      type: "link",
+      name: "buttonLabel",
+      title: "Enquiry button label",
+      description:
+        "Both buttons open the Custom Enquiry overlay. Defaults to “Request Custom Piece”.",
+      type: "string",
     }),
   ],
   preview: {

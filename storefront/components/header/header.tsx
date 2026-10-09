@@ -3,6 +3,7 @@ import Link from "next/link";
 import { LocalCart } from "../../app/_cart/local-cart";
 import { sanityFetch } from "../../data/sanity";
 import { SETTINGS_QUERY } from "../../data/sanity/queries";
+import { OverlayTrigger } from "../overlays/overlay-context";
 import { BackLink } from "./back-link";
 import s from "./header.module.css";
 
@@ -40,7 +41,7 @@ export async function Header() {
         </ul>
 
         <div className={`${s.section} ${s.desktop}`}>
-          <Link href="/#custom">Custom</Link>
+          <OverlayTrigger name="enquiry">Custom</OverlayTrigger>
         </div>
 
         <BackLink className={s.back} />

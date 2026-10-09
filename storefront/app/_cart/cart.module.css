@@ -1,31 +1,188 @@
-.cart {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  text-align: left;
-  top: 0;
-  left: 0;
-  opacity: 0.99;
-  padding: var(--main-padding);
-  background-color: var(--color-bg);
-  color: black;
+/*
+ * Cart overlay (Cart/Desktop, Cart/Mobile)
+ * Desktop: thumbnails 60 x 80 (10px gaps), name + Remove at the top,
+ * "Gold, 9K," / "1mm, 42cm, 1.4g" + price at the bottom; 90px per item.
+ * Mobile: name + Remove, thumbnails 36 x 48, then one value per grid
+ * column, price underneath, a rule between items.
+ */
 
-  .main-grid {
-    padding-block: calc(var(--main-padding) * 2);
-  }
-
-  .total-checkout {
-    padding-block: calc(var(--main-padding) * 2);
-    text-align: right;
-  }
-
-  @media (max-width: 480px) {
-    padding: calc(var(--main-padding) / 2);
-    overflow-y: auto;
-  }
+.items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.cartButton {
+.item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto 1fr auto;
+  column-gap: 10px;
+  min-height: 83px;
+  margin-bottom: 7px;
+}
+
+.item a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.item a:hover {
+  text-decoration: underline;
+}
+
+.title {
+  grid-column: 2;
+  grid-row: 1;
+  font: inherit;
+}
+
+.variant {
+  display: block;
+}
+
+.remove {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  cursor: pointer;
+}
+
+.remove:hover {
+  text-decoration: underline;
+}
+
+.thumbnails {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  display: flex;
+  gap: 10px;
+  margin: 3px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.thumbnail {
   position: relative;
-  z-index: var(--header-z-index);
+  width: 60px;
+  height: 80px;
+  overflow: hidden;
+  background: #d9d9d9;
+}
+
+.thumbnail img {
+  object-fit: cover;
+}
+
+/* Details end just below the thumbnails; price sits on their first line */
+.details {
+  grid-column: 2;
+  grid-row: 3;
+  align-self: end;
+  margin-bottom: -4.5px;
+}
+
+.price {
+  grid-column: 3;
+  grid-row: 3;
+  align-self: end;
+  margin-bottom: 13.5px;
+  text-align: right;
+}
+
+.note {
+  display: none;
+}
+
+.empty {
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .item {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    grid-template-rows: none;
+    column-gap: 5px;
+    min-height: 0;
+    margin: 0;
+    padding: 7px 0 2px;
+    border-bottom: 1px solid currentColor;
+  }
+
+  .item:first-child {
+    padding-top: 0;
+  }
+
+  .title {
+    grid-column: 1 / 7;
+    margin: 0;
+  }
+
+  .variant {
+    display: inline;
+  }
+
+  .remove {
+    grid-column: 7 / -1;
+    justify-self: end;
+    margin: 0;
+  }
+
+  .thumbnails {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    gap: 5px;
+    margin-top: 2.5px;
+  }
+
+  .thumbnail {
+    width: 36px;
+    height: 48px;
+  }
+
+  .details,
+  .price {
+    display: contents;
+  }
+
+  .desktopBreak {
+    display: none;
+  }
+
+  .details > span {
+    grid-row: 3;
+    margin-top: 7.5px;
+    white-space: nowrap;
+  }
+
+  .material { grid-column: 1 / 3; }
+  .karat { grid-column: 3 / 4; }
+  .detail0 { grid-column: 4 / 6; }
+  .detail1 { grid-column: 6 / 8; }
+  .detail2 {
+    grid-column: 8 / 9;
+    justify-self: end;
+  }
+
+  .currency {
+    grid-column: 6 / 8;
+    grid-row: 4;
+    text-align: left;
+  }
+
+  .amount {
+    grid-column: 8 / 9;
+    grid-row: 4;
+    justify-self: end;
+  }
+
+  .note {
+    display: block;
+    margin: 0 20px 5.5px;
+  }
 }

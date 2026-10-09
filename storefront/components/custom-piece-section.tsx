@@ -6,7 +6,7 @@ import { Gallery } from "./gallery/gallery";
 import s from "./home.module.css";
 import { ProductTile } from "./product-tile/product-tile";
 import { Accordion } from "./ui/accordion";
-import { CtaButton } from "./ui/cta-button";
+import { EnquiryButton } from "./ui/enquiry-button";
 import { SpecColumns } from "./ui/spec-columns";
 import { Band } from "./wordmark/wordmark";
 
@@ -24,11 +24,7 @@ export type CustomPieceSectionBlock = {
   materialsAndSpecifications?: PortableTextBlock[] | null;
   shippingReturnsWarranties?: PortableTextBlock[] | null;
   priceLabel?: string | null;
-  cta?: {
-    url?: string | null;
-    label?: string | null;
-    openInNewTab?: boolean | null;
-  } | null;
+  buttonLabel?: string | null;
 };
 
 /**
@@ -44,17 +40,13 @@ export function CustomPieceSection({
 }) {
   const products = block.products?.filter(Boolean) ?? [];
   const images = pictureUrls(block.images);
-  const label = block.cta?.label || "Request Custom Piece";
-  // TODO: point at the Custom Enquiry Overlay once it's built
-  const href = block.cta?.url || "/contact";
-  const newTab = !!block.cta?.openInNewTab;
+  const label = block.buttonLabel || "Request Custom Piece";
 
+  // Both buttons slide in the Custom Enquiry overlay
   const button = (className: string) => (
-    <CtaButton
-      href={href}
+    <EnquiryButton
       label={label}
       price={block.priceLabel}
-      newTab={newTab}
       className={className}
     />
   );

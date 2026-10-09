@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 
 import type { Metadata } from "next";
+import type { PortableTextBlock } from "next-sanity";
 import { VisualEditing } from "next-sanity/visual-editing";
 import { draftMode } from "next/headers";
 import { Toaster } from "sonner";
@@ -17,6 +18,16 @@ import { GridOverlay } from "../components/grid-overlay";
 import { Footer } from "../components/footer/footer";
 import { Header } from "../components/header/header";
 import { CartProvider } from "./_cart/cart-context";
+import { CartProductInfo } from "./_cart/cart";
+import { OverlayProvider } from "../components/overlays/overlay-context";
+import { Overlays } from "../components/overlays/overlays";
+import {
+  formatKarat,
+  PLACEHOLDER_PRODUCTS,
+  ProductCard,
+  productImages,
+} from "../data/products";
+import { INDEX_PRODUCTS_QUERY } from "../data/sanity/queries";
 
 /**
  * Generate metadata for the page.
@@ -68,6 +79,27 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const { isEnabled: isDraftMode } = await draftMode();
+  const [{ data: settings }, { data: products }] = await Promise.all([
+    sanityFetch({ query: SETTINGS_QUERY }),
+    sanityFetch({ query: INDEX_PRODUCTS_QUERY }),
+  ]);
+
+  // Specs + images for the cart overlay, keyed by Shopify handle
+  const cartProducts: Record<string, CartProductInfo> = {};
+  const cartSource = (
+    products?.length || process.env.NODE_ENV !== "development"
+      ? (products ?? [])
+      : PLACEHOLDER_PRODUCTS
+  ) as ProductCard[];
+  for (const product of cartSource) {
+    if (!product.slug) continue;
+    cartProducts[product.slug] = {
+      title: product.title,
+      karat: formatKarat(product.carats),
+      details: [product.thickness ?? "", product.length ?? "", product.weight ?? ""],
+      images: productImages(product, 200),
+    };
+  }
 
   return (
     <html lang="en">
@@ -86,9 +118,17 @@ export default async function RootLayout({
         <SanityLive onError={handleError} />
         {/* We'll keep a static store to demonstrate functionality. For a complete e-commerce solution, the cart should have server state in the form of cookies */}
         <CartProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
+          <OverlayProvider>
+            <Header />
+            <main>{children}</main>
+            <Footer />
+            <Overlays
+              products={cartProducts}
+              enquiryIntro={
+                settings?.customEnquiryIntro as PortableTextBlock[] | undefined
+              }
+            />
+          </OverlayProvider>
         </CartProvider>
       </body>
     </html>

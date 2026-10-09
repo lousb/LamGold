@@ -1,0 +1,106 @@
+/*
+ * Custom Enquiry Overlay
+ * Intro: justified, 18px lines, a blank line between paragraphs.
+ * Fields: number, then the field 79px in; 31px rows with a 1px rule.
+ * Field 05 is a tall text area. Placeholders #ccc.
+ */
+
+.intro {
+  line-height: var(--line-height-tight);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.intro p + p {
+  margin-top: var(--line-height-tight);
+}
+
+.form {
+  margin-top: 26px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  padding: 7.5px 0 4.5px;
+  border-bottom: 1px solid currentColor;
+  line-height: var(--line-height-tight);
+  cursor: text;
+}
+
+.number {
+  flex: 0 0 79px;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  outline: none;
+  resize: none;
+}
+
+.input::placeholder {
+  color: #ccc;
+  opacity: 1;
+}
+
+/* Text area + placeholder share one grid cell; the cell grows to fit
+   whichever is taller, so the placeholder can wrap */
+.multiline {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.multiline > * {
+  grid-area: 1 / 1;
+}
+
+textarea.input {
+  display: block;
+  width: 100%;
+  min-height: var(--line-height-tight);
+  height: auto;
+  overflow: hidden;
+  field-sizing: content;
+}
+
+.placeholder {
+  color: #ccc;
+  pointer-events: none;
+}
+
+textarea.input:not(:placeholder-shown) + .placeholder {
+  visibility: hidden;
+}
+
+.tall {
+  align-items: flex-start;
+}
+
+.tall textarea.input {
+  min-height: 108px;
+  overflow-y: auto;
+}
+
+.status {
+  margin-top: var(--line-height-tight);
+  line-height: var(--line-height-tight);
+}
+
+.status:empty {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .tall textarea.input {
+    min-height: 126px;
+  }
+}

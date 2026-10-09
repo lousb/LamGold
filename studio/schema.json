@@ -1308,11 +1308,10 @@
           },
           "optional": true
         },
-        "cta": {
+        "buttonLabel": {
           "type": "objectAttribute",
           "value": {
-            "type": "inline",
-            "name": "link"
+            "type": "string"
           },
           "optional": true
         }
@@ -2298,6 +2297,14 @@
         "optional": false
       },
       "shippingReturnsWarranties": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "blockContent"
+        },
+        "optional": true
+      },
+      "customEnquiryIntro": {
         "type": "objectAttribute",
         "value": {
           "type": "inline",

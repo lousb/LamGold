@@ -3,8 +3,10 @@
 import React, {
   createContext,
   useContext,
+  useEffect,
   useMemo,
-  useOptimistic,
+  useReducer,
+  useState,
 } from "react";
 import { DEFAULT_CURRENCY_CODE } from "../../shopify/constants";
 import { Cart, CartItem, Product, ProductVariant } from "../../shopify/types";
@@ -215,31 +217,42 @@ function loadCartFromStorage(): Cart | undefined {
   return undefined;
 }
 
+/**
+ * Cart state lives in the browser (localStorage) until checkout.
+ * Starts empty on the server and first render, then loads the saved cart
+ * after mount so hydration matches.
+ */
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const initialCart = loadCartFromStorage() ?? createEmptyCart();
-  const [optimisticCart, updateOptimisticCart] = useOptimistic(
-    initialCart,
-    cartReducer,
-  );
+  const [cart, dispatch] = useReducer(cartReducer, undefined, createEmptyCart);
+  const [hydrated, setHydrated] = useState(false);
 
-  const updateCartItem = (merchandiseId: string, updateType: UpdateType) => {
-    updateOptimisticCart({
-      type: "UPDATE_ITEM",
-      payload: { merchandiseId, updateType },
-    });
-  };
+  useEffect(() => {
+    const stored = loadCartFromStorage();
+    if (stored) dispatch({ type: "SET_CART", payload: stored });
+    setHydrated(true);
+  }, []);
 
-  const addCartItem = (variant: ProductVariant, product: Product) => {
-    updateOptimisticCart({ type: "ADD_ITEM", payload: { variant, product } });
-  };
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+    } catch {
+      // Storage unavailable (private mode etc.) - cart still works this visit
+    }
+  }, [cart, hydrated]);
 
   const value = useMemo(
     () => ({
-      cart: optimisticCart,
-      updateCartItem,
-      addCartItem,
+      cart,
+      updateCartItem: (merchandiseId: string, updateType: UpdateType) =>
+        dispatch({
+          type: "UPDATE_ITEM",
+          payload: { merchandiseId, updateType },
+        }),
+      addCartItem: (variant: ProductVariant, product: Product) =>
+        dispatch({ type: "ADD_ITEM", payload: { variant, product } }),
     }),
-    [optimisticCart],
+    [cart],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

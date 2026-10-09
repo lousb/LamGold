@@ -38,6 +38,14 @@ export const settings = defineType({
       type: "blockContent",
     }),
     defineField({
+      name: "customEnquiryIntro",
+      title: "Custom enquiry intro",
+      description:
+        "Shown at the top of the Custom Enquiry overlay. Leave empty to use the default copy.",
+      group: "general",
+      type: "blockContent",
+    }),
+    defineField({
       name: "footer",
       group: "general",
       type: "footer",
