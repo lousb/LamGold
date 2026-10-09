@@ -79,6 +79,7 @@ function renderSections(pageBuilderSections: PageBuilderSection[], page: Page) {
         <BlockRenderer
           key={block._key}
           index={index}
+          nextType={pageBuilderSections[index + 1]?._type}
           block={block}
           pageId={page._id}
           pageType={page._type}

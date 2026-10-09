@@ -1,8 +1,8 @@
 import { defineField, defineType } from "sanity";
 
 /**
- * Home page builder block: brand / story content, e.g. "Our story",
- * material sourcing, craftsmanship, etc.
+ * Home page builder block: brand / story copy.
+ * Body sits top-right; the heading (e.g. "Our Story") sits at the bottom.
  */
 export const storySection = defineType({
   name: "storySection",
@@ -12,6 +12,7 @@ export const storySection = defineType({
     defineField({
       name: "heading",
       title: "Heading",
+      description: "e.g. Our Story",
       type: "string",
     }),
     defineField({
@@ -19,21 +20,14 @@ export const storySection = defineType({
       title: "Body",
       type: "blockContent",
     }),
-    defineField({
-      name: "image",
-      title: "Image",
-      type: "picture",
-    }),
   ],
   preview: {
     select: {
       heading: "heading",
-      media: "image",
     },
-    prepare({ heading, media }) {
+    prepare({ heading }) {
       return {
         title: heading || "Story section",
-        media,
       };
     },
   },

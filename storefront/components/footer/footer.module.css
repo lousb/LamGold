@@ -6,8 +6,8 @@
 .footer {
   padding-top: 5px;
   padding-bottom: 20px;
-  background: var(--color-bg);
-  color: var(--color-text);
+  background: var(--color-footer-bg);
+  color: var(--color-footer-text);
   font-family: var(--font-serif);
   font-weight: 400;
   font-size: 16px;
@@ -48,7 +48,7 @@
   display: flex;
   align-items: baseline;
   margin-top: 30px;
-  border-bottom: 2px solid currentColor;
+  border-bottom: 1px solid currentColor;
 }
 
 .input {
@@ -81,7 +81,7 @@
   margin-top: 6px !important;
 }
 
-/* Image: 4:5, centred, ~5 columns wide */
+/* Image: 3:4, centred, 368px wide in the 1920 frame (Home design) */
 
 .imageRow {
   padding-top: 95px;
@@ -89,45 +89,73 @@
 }
 
 .image {
-  /* 5 columns + 4.5 gutters, as drawn in the design */
-  width: calc((100% - 23 * var(--grid-gutter)) / 24 * 5 + 4.5 * var(--grid-gutter));
-  aspect-ratio: 4 / 5;
+  position: relative;
+  overflow: hidden;
+  width: calc(100vw * 368 / 1920);
+  aspect-ratio: 3 / 4;
   margin-inline: auto;
   background: #d9d9d9;
 }
 
+.image img {
+  object-fit: cover;
+}
+
 /* Full-width wordmark */
 
-.logo img {
-  display: block;
-  width: 100%;
-  height: auto;
+.logo {
+  color: inherit;
 }
 
-/* Smaller screens (no design yet): stack into two columns, then one */
+/*
+ * Mobile (Footer in the Mobile designs): headings in columns 1-4, links
+ * in 5-8; newsletter field full width; image in columns 3-6.
+ */
+@media (max-width: 767px) {
+  .footer {
+    padding-top: 16px;
+    padding-bottom: 21px;
+  }
 
-@media (max-width: 900px) {
   .footer .column {
-    grid-column: span 12;
-    margin-bottom: 30px;
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    margin-bottom: 10px;
   }
 
-  .imageRow {
-    padding-top: 40px;
-    padding-bottom: 60px;
+  .heading {
+    grid-column: 1 / 5;
+    margin: 0;
   }
 
-  .image {
-    width: 50%;
+  .column ul,
+  .column > p {
+    grid-column: 5 / -1;
   }
-}
 
-@media (max-width: 560px) {
-  .footer .column {
+  .column > p {
+    padding-right: 10px;
+    line-height: 18px;
+  }
+
+  .form {
+    grid-column: 1 / -1;
+    margin-top: 12px;
+  }
+
+  .error {
     grid-column: 1 / -1;
   }
 
+  .imageRow {
+    padding-top: 58px;
+    padding-bottom: 66px;
+  }
+
   .image {
-    width: 70%;
+    /* Columns 3-6 */
+    width: calc(var(--grid-col) * 4 + var(--grid-gutter) * 3);
+    aspect-ratio: 3 / 4;
   }
 }

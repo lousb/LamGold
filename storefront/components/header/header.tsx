@@ -3,6 +3,7 @@ import Link from "next/link";
 import { LocalCart } from "../../app/_cart/local-cart";
 import { sanityFetch } from "../../data/sanity";
 import { SETTINGS_QUERY } from "../../data/sanity/queries";
+import { BackLink } from "./back-link";
 import s from "./header.module.css";
 
 /** Shown until Site Settings → Footer → Products is filled in */
@@ -12,8 +13,9 @@ const capitalise = (value: string) =>
   value.charAt(0).toUpperCase() + value.slice(1);
 
 /**
- * Header/Desktop: fixed black bar, 20px from the top and left,
- * 100vw - 40px wide, split into three equal sections.
+ * Desktop (Home design): fixed bar 20px from the top/left, 100vw - 40px wide,
+ * product types / Custom / Index + Cart. Hidden on desktop product pages.
+ * Mobile: just "Cart (0)" top right, plus "Back" on product pages.
  */
 export async function Header() {
   const { data: settings } = await sanityFetch({ query: SETTINGS_QUERY });
@@ -26,7 +28,7 @@ export async function Header() {
   return (
     <header className={s.header}>
       <nav className={s.bar} aria-label="Main">
-        <ul role="list" className={s.products}>
+        <ul role="list" className={`${s.products} ${s.desktop}`}>
           {productTypes.map((type, i) => (
             <li key={type}>
               <Link href={`/products?type=${type}`}>
@@ -37,13 +39,16 @@ export async function Header() {
           ))}
         </ul>
 
-        <div className={s.section}>
-          {/* TODO: point at the Custom Piece section / enquiry overlay */}
+        <div className={`${s.section} ${s.desktop}`}>
           <Link href="/#custom">Custom</Link>
         </div>
 
+        <BackLink className={s.back} />
+
         <div className={`${s.section} ${s.split}`}>
-          <Link href="/products">Index</Link>
+          <Link href="/#index" className={s.desktop}>
+            Index
+          </Link>
           <LocalCart />
         </div>
       </nav>

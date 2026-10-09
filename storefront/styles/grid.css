@@ -14,6 +14,18 @@
   --grid-columns: 24;
   --grid-margin: 10px;
   --grid-gutter: 10px;
+}
+
+/* Mobile (360 frame): 8 columns, 20px margin, 5px gutter */
+@media (max-width: 767px) {
+  :root {
+    --grid-columns: 8;
+    --grid-margin: 20px;
+    --grid-gutter: 5px;
+  }
+}
+
+:root {
   /* Approx. width of one column for sizing things off-grid
      (100vw includes the scrollbar where one is shown) */
   --grid-col: calc(
@@ -97,7 +109,14 @@
   height: 100vh;
 }
 
+/* Same tint as the overlay in the design files */
 .grid-overlay > div {
-  background: rgba(255, 0, 0, 0.08);
-  border-inline: 1px solid rgba(255, 0, 0, 0.15);
+  background: rgba(255, 0, 0, 0.1);
+}
+
+/* Desktop has 24 columns; hide the extra overlay columns on mobile */
+@media (max-width: 767px) {
+  .grid-overlay > div:nth-child(n + 9) {
+    display: none;
+  }
 }

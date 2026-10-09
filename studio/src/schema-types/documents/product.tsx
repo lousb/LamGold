@@ -36,6 +36,16 @@ export const product = defineType({
       type: "proxyString",
       options: { field: "store.slug.current" },
     }),
+    defineField({
+      name: "images",
+      title: "Images",
+      description:
+        "Editorial images. The first is the main image on the product page and home page tile; the rest show as thumbnails. Falls back to the Shopify image when empty.",
+      type: "array",
+      group: "editorial",
+      of: [{ type: "picture" }],
+      options: { layout: "grid" },
+    }),
     // Price comes from Shopify (store.priceRange, synced below) so it stays
     // in sync with checkout - it is not duplicated as an editable field here.
     defineField({

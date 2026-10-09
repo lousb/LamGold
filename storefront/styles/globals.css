@@ -3,9 +3,21 @@
 @import url("./grid.css");
 
 :root {
-  --color-text: #000000;
-  --color-text-muted: #878580;
-  --color-bg: #ffffff;
+  /*
+   * Palette, from the Home / Product designs.
+   * Desktop: deep red ground with pink type (Home) or white type (Product).
+   * Mobile: black ground with white type and a white footer.
+   */
+  --lam-red: #190000;
+  --lam-pink: #ffe5e5;
+
+  --color-bg: var(--lam-red);
+  --color-text: var(--lam-pink);
+  --color-text-muted: color-mix(in srgb, var(--color-text) 25%, var(--color-bg));
+  --color-button: var(--lam-pink);
+  --color-button-text: var(--lam-red);
+  --color-footer-bg: var(--lam-pink);
+  --color-footer-text: var(--lam-red);
 
   --main-gap: 1ch;
   --main-padding: 0.5ch;
@@ -13,12 +25,54 @@
   --header-z-index: 10;
   --title-z-index: 9;
 
-  --font-size: 12px;
+  --font-size: 16px;
+  --line-height: 21px;
+  --line-height-tight: 18px;
   --font-sans-serif: "Arial", ui-sans-serif, system-ui, sans-serif;
 
   /* Placeholder brand fonts until the real typefaces are added */
   --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-serif: "Times New Roman", Times, serif;
+
+  /*
+   * Product tiles: a third of the page (8 of 24 columns) at 627 x 910 in the
+   * 1920 frame, so a row plus the LAMGOLD band fills a 1080 viewport.
+   */
+  --panel-width: calc((100vw - 40px) / 3);
+  --tile-ratio: 627 / 910;
+  --tile-height: calc(var(--panel-width) * 910 / 627);
+}
+
+@media (max-width: 767px) {
+  :root {
+    --color-bg: #000;
+    --color-text: #fff;
+    --color-button: #fff;
+    --color-button-text: #000;
+    --color-footer-bg: #fff;
+    --color-footer-text: #000;
+
+    /* Full width (20px margins), 3:4 */
+    --panel-width: calc(100vw - 40px);
+    --tile-ratio: 3 / 4;
+    --tile-height: calc(var(--panel-width) * 4 / 3);
+  }
+}
+
+/* Product pages use white type on desktop */
+@media (min-width: 768px) {
+  body:has([data-page="product"]) {
+    --color-text: #fff;
+    --color-button: #fff;
+    --color-button-text: var(--lam-red);
+  }
+}
+
+body {
+  font-family: var(--font-serif);
+  font-size: var(--font-size);
+  font-weight: 400;
+  line-height: var(--line-height);
 }
 
 .visually-hidden {

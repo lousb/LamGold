@@ -1,0 +1,150 @@
+/*
+ * Home page sections (Home/Desktop 1920 frame, Home/Mobile 360 frame).
+ * Desktop panels are 8 of 24 columns; mobile is a single column.
+ */
+
+/* ---------- Rows of product tiles ---------- */
+
+.rows {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: var(--grid-gutter);
+  padding-inline: var(--grid-margin);
+}
+
+@media (max-width: 767px) {
+  .rows {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------- Custom piece ---------- */
+
+.customPanels {
+  padding-top: 10px;
+  line-height: var(--line-height-tight);
+}
+
+.customLeft,
+.customImage,
+.customRight {
+  grid-column: span 8;
+  min-width: 0;
+}
+
+.customLeft {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.customDescription {
+  margin-top: -1px;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* Options table centred on the panel, accordions + button at the bottom */
+.customRight {
+  display: grid;
+  grid-template-rows: 1fr auto 1fr;
+}
+
+.customSpecs {
+  grid-row: 2;
+}
+
+.customFooter {
+  grid-row: 3;
+  align-self: end;
+}
+
+.customButton {
+  margin-top: 40px;
+}
+
+@media (max-width: 767px) {
+  .customPanels {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .customLeft,
+  .customRight {
+    display: contents;
+  }
+
+  .customDescription {
+    order: 1;
+    margin-top: 0;
+  }
+
+  .desktopButton {
+    display: none !important;
+  }
+
+  .customImage {
+    order: 2;
+    margin-top: 53px;
+  }
+
+  .customSpecs {
+    order: 3;
+    margin-top: 55px;
+  }
+
+  .customFooter {
+    order: 4;
+    margin-top: 43px;
+  }
+
+  .customButton {
+    margin-top: 60px;
+  }
+}
+
+/* ---------- Story ---------- */
+
+.story {
+  grid-template-rows: auto 1fr;
+  min-height: calc(var(--tile-height) + 18px);
+  line-height: var(--line-height-tight);
+}
+
+.storyBody {
+  grid-column: 17 / -1;
+  padding-top: 9px;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.storyBody p + p {
+  margin-top: var(--line-height-tight);
+}
+
+.storyHeading {
+  grid-column: 5 / 9;
+  grid-row: 2;
+  align-self: end;
+  margin-bottom: 3px;
+  font: inherit;
+}
+
+@media (max-width: 767px) {
+  /* Sits tight under the LAMGOLD band above it */
+  .story {
+    min-height: 781px;
+    margin-top: -10px;
+  }
+
+  .storyBody {
+    grid-column: 1 / -1;
+    padding-top: 8px;
+  }
+
+  .storyHeading {
+    grid-column: 1 / -1;
+    margin-bottom: 5px;
+    text-align: right;
+  }
+}

@@ -229,8 +229,23 @@ export type PageSeo = {
 export type CustomPieceSection = {
   _type: "customPieceSection";
   heading?: string;
+  products?: Array<
+    {
+      _key: string;
+    } & ProductReference
+  >;
   description?: string;
-  image: Picture;
+  images?: Array<
+    {
+      _key: string;
+    } & Picture
+  >;
+  karats?: Array<string>;
+  thicknesses?: Array<string>;
+  lengths?: Array<string>;
+  weights?: Array<string>;
+  materialsAndSpecifications?: BlockContent;
+  priceLabel?: string;
   cta?: Link;
 };
 
@@ -238,7 +253,6 @@ export type StorySection = {
   _type: "storySection";
   heading?: string;
   body?: BlockContent;
-  image: Picture;
 };
 
 export type ProductTypeSection = {
@@ -441,6 +455,11 @@ export type Product = {
   _rev: string;
   titleProxy?: ProxyString;
   slugProxy?: ProxyString;
+  images?: Array<
+    {
+      _key: string;
+    } & Picture
+  >;
   type:
     "necklaces" | "chains" | "pendants" | "earrings" | "bracelets" | "rings";
   description?: string;
@@ -695,7 +714,7 @@ export type SETTINGS_QUERY_RESULT = {
 
 // Source: data/sanity/queries.ts
 // Variable: HOME_QUERY
-// Query: *[_type == 'home' ][0]{    _type,    _id,    _updatedAt,    _createdAt,    "status": select(_id in path("drafts.**") => "draft", "published"),    "name": "Home",    "slug": "/",    "pageBuilder": pageBuilder[]{        _key,  _type,  // productTypeSection  heading,  productType,  "products": select(    _type == "productTypeSection" => *[_type == "product" && type == ^.productType && defined(store.slug.current)] | order(_updatedAt desc) {      _id,      store,    }  ),  // storySection  body,  "image": image{    asset,    crop,    hotspot,    alt,  },  // customPieceSection  description,  "cta": cta{    _type,    _key,    linkType,    href,    "page": page->slug.current,    "product": product->store.slug.current,    "collection": collection->store.slug.current,    label,    openInNewTab  }    },    pageSeo{  _type,  "title": coalesce(title, ^.name),  description,  ogImage}  }
+// Query: *[_type == 'home' ][0]{    _type,    _id,    _updatedAt,    _createdAt,    "status": select(_id in path("drafts.**") => "draft", "published"),    "name": "Home",    "slug": "/",    "pageBuilder": pageBuilder[]{        _key,  _type,  heading,  // productTypeSection  productType,  "products": select(    _type == "productTypeSection" => *[_type == "product" && type == ^.productType && defined(store.slug.current) && !(store.isDeleted == true)] | order(coalesce(store.createdAt, _createdAt) asc) {        _id,  type,  carats,  thickness,  length,  weight,  description,  "createdAt": coalesce(store.createdAt, _createdAt),  "title": store.title,  "slug": store.slug.current,  "previewImageUrl": store.previewImageUrl,  "price": store.priceRange.minVariantPrice,  "maxPrice": store.priceRange.maxVariantPrice,  "images": images[]{ _key, asset, crop, hotspot, alt }    },    _type == "customPieceSection" => products[]->{        _id,  type,  carats,  thickness,  length,  weight,  description,  "createdAt": coalesce(store.createdAt, _createdAt),  "title": store.title,  "slug": store.slug.current,  "previewImageUrl": store.previewImageUrl,  "price": store.priceRange.minVariantPrice,  "maxPrice": store.priceRange.maxVariantPrice,  "images": images[]{ _key, asset, crop, hotspot, alt }    }  ),  // storySection  body,  // customPieceSection  description,  "images": images[]{ _key, asset, crop, hotspot, alt },  karats,  thicknesses,  lengths,  weights,  materialsAndSpecifications,  priceLabel,  "shippingReturnsWarranties": select(    _type == "customPieceSection" => *[_type == "settings"][0].shippingReturnsWarranties  ),  "cta": cta{    _type,    _key,    linkType,    "url": select(      linkType == 'href' => href,      linkType == 'home' => '/',      linkType == 'plp' => '/products',      linkType == 'page' => '/' + page->slug.current,      linkType == 'product' => '/products/' + product->store.slug.current,      linkType == 'collection' => '/collections/' + collection->store.slug.current,    ),    label,    openInNewTab  }    },    pageSeo{  _type,  "title": coalesce(title, ^.name),  description,  ogImage}  }
 export type HOME_QUERY_RESULT = {
   _type: "home";
   _id: string;
@@ -710,23 +729,55 @@ export type HOME_QUERY_RESULT = {
         _type: "customPieceSection";
         heading: string | null;
         productType: null;
-        products: null;
+        products: Array<{
+          _id: string;
+          type:
+            | "bracelets"
+            | "chains"
+            | "earrings"
+            | "necklaces"
+            | "pendants"
+            | "rings";
+          carats: number | null;
+          thickness: string | null;
+          length: string | null;
+          weight: string | null;
+          description: string | null;
+          createdAt: string;
+          title: string | null;
+          slug: string | null;
+          previewImageUrl: string | null;
+          price: number | null;
+          maxPrice: number | null;
+          images: Array<{
+            _key: string;
+            asset: SanityImageAssetReference | null;
+            crop: SanityImageCrop | null;
+            hotspot: SanityImageHotspot | null;
+            alt: string | null;
+          }> | null;
+        }> | null;
         body: null;
-        image: {
+        description: string | null;
+        images: Array<{
+          _key: string;
           asset: SanityImageAssetReference | null;
           crop: SanityImageCrop | null;
           hotspot: SanityImageHotspot | null;
           alt: string | null;
-        };
-        description: string | null;
+        }> | null;
+        karats: Array<string> | null;
+        thicknesses: Array<string> | null;
+        lengths: Array<string> | null;
+        weights: Array<string> | null;
+        materialsAndSpecifications: BlockContent | null;
+        priceLabel: string | null;
+        shippingReturnsWarranties: BlockContent | null;
         cta: {
           _type: "link";
           _key: null;
           linkType: "collection" | "home" | "href" | "page" | "plp" | "product";
-          href: string | null;
-          page: string | null;
-          product: string | null;
-          collection: string | null;
+          url: string | "/" | "/products" | null;
           label: string | null;
           openInNewTab: boolean;
         } | null;
@@ -744,11 +795,42 @@ export type HOME_QUERY_RESULT = {
           | "rings";
         products: Array<{
           _id: string;
-          store: ShopifyProduct | null;
+          type:
+            | "bracelets"
+            | "chains"
+            | "earrings"
+            | "necklaces"
+            | "pendants"
+            | "rings";
+          carats: number | null;
+          thickness: string | null;
+          length: string | null;
+          weight: string | null;
+          description: string | null;
+          createdAt: string;
+          title: string | null;
+          slug: string | null;
+          previewImageUrl: string | null;
+          price: number | null;
+          maxPrice: number | null;
+          images: Array<{
+            _key: string;
+            asset: SanityImageAssetReference | null;
+            crop: SanityImageCrop | null;
+            hotspot: SanityImageHotspot | null;
+            alt: string | null;
+          }> | null;
         }>;
         body: null;
-        image: null;
         description: null;
+        images: null;
+        karats: null;
+        thicknesses: null;
+        lengths: null;
+        weights: null;
+        materialsAndSpecifications: null;
+        priceLabel: null;
+        shippingReturnsWarranties: null;
         cta: null;
       }
     | {
@@ -758,13 +840,15 @@ export type HOME_QUERY_RESULT = {
         productType: null;
         products: null;
         body: BlockContent | null;
-        image: {
-          asset: SanityImageAssetReference | null;
-          crop: SanityImageCrop | null;
-          hotspot: SanityImageHotspot | null;
-          alt: string | null;
-        };
         description: null;
+        images: null;
+        karats: null;
+        thicknesses: null;
+        lengths: null;
+        weights: null;
+        materialsAndSpecifications: null;
+        priceLabel: null;
+        shippingReturnsWarranties: null;
         cta: null;
       }
   > | null;
@@ -910,6 +994,11 @@ export type ALL_PRODUCTS_QUERY_RESULT = Array<{
   _rev: string;
   titleProxy?: ProxyString;
   slugProxy?: ProxyString;
+  images?: Array<
+    {
+      _key: string;
+    } & Picture
+  >;
   type:
     "bracelets" | "chains" | "earrings" | "necklaces" | "pendants" | "rings";
   description?: string;
@@ -933,6 +1022,11 @@ export type PRODUCTS_BY_TYPE_QUERY_RESULT = Array<{
   _rev: string;
   titleProxy?: ProxyString;
   slugProxy?: ProxyString;
+  images?: Array<
+    {
+      _key: string;
+    } & Picture
+  >;
   type:
     "bracelets" | "chains" | "earrings" | "necklaces" | "pendants" | "rings";
   description?: string;
@@ -946,6 +1040,33 @@ export type PRODUCTS_BY_TYPE_QUERY_RESULT = Array<{
 }>;
 
 // Source: data/sanity/queries.ts
+// Variable: INDEX_PRODUCTS_QUERY
+// Query: *[_type == "product" && defined(store.slug.current) && !(store.isDeleted == true)] {      _id,  type,  carats,  thickness,  length,  weight,  description,  "createdAt": coalesce(store.createdAt, _createdAt),  "title": store.title,  "slug": store.slug.current,  "previewImageUrl": store.previewImageUrl,  "price": store.priceRange.minVariantPrice,  "maxPrice": store.priceRange.maxVariantPrice,  "images": images[]{ _key, asset, crop, hotspot, alt }  }
+export type INDEX_PRODUCTS_QUERY_RESULT = Array<{
+  _id: string;
+  type:
+    "bracelets" | "chains" | "earrings" | "necklaces" | "pendants" | "rings";
+  carats: number | null;
+  thickness: string | null;
+  length: string | null;
+  weight: string | null;
+  description: string | null;
+  createdAt: string;
+  title: string | null;
+  slug: string | null;
+  previewImageUrl: string | null;
+  price: number | null;
+  maxPrice: number | null;
+  images: Array<{
+    _key: string;
+    asset: SanityImageAssetReference | null;
+    crop: SanityImageCrop | null;
+    hotspot: SanityImageHotspot | null;
+    alt: string | null;
+  }> | null;
+}>;
+
+// Source: data/sanity/queries.ts
 // Variable: MORE_PRODUCTS_QUERY
 // Query: *[_type == "product" && _id != $skip && defined(store.slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {    ...,  }
 export type MORE_PRODUCTS_QUERY_RESULT = Array<{
@@ -956,6 +1077,11 @@ export type MORE_PRODUCTS_QUERY_RESULT = Array<{
   _rev: string;
   titleProxy?: ProxyString;
   slugProxy?: ProxyString;
+  images?: Array<
+    {
+      _key: string;
+    } & Picture
+  >;
   type:
     "bracelets" | "chains" | "earrings" | "necklaces" | "pendants" | "rings";
   description?: string;
@@ -970,24 +1096,36 @@ export type MORE_PRODUCTS_QUERY_RESULT = Array<{
 
 // Source: data/sanity/queries.ts
 // Variable: PRODUCT_QUERY
-// Query: *[_type == "product" && store.slug.current == $slug] [0] {    _type,    _id,    _updatedAt,    _createdAt,    type,    description,    materialsAndSpecifications,    carats,    thickness,    length,    weight,    "shippingReturnsWarranty": coalesce(      shippingReturnsWarrantyOverride,      *[_type == 'settings'][0].shippingReturnsWarranties    ),    "status": select(_id in path("drafts.**") => "draft", "published"),    "name": coalesce(name, "Untitled Page"),    "slug": store.slug.current,    pageSeo{  _type,  "title": coalesce(title, ^.name),  description,  ogImage}  }
+// Query: *[_type == "product" && store.slug.current == $slug] [0] {    _type,    _updatedAt,    _createdAt,      _id,  type,  carats,  thickness,  length,  weight,  description,  "createdAt": coalesce(store.createdAt, _createdAt),  "title": store.title,  "slug": store.slug.current,  "previewImageUrl": store.previewImageUrl,  "price": store.priceRange.minVariantPrice,  "maxPrice": store.priceRange.maxVariantPrice,  "images": images[]{ _key, asset, crop, hotspot, alt },    materialsAndSpecifications,    "shippingReturnsWarranty": coalesce(      shippingReturnsWarrantyOverride,      *[_type == 'settings'][0].shippingReturnsWarranties    ),    "status": select(_id in path("drafts.**") => "draft", "published"),    "name": coalesce(name, "Untitled Page"),    pageSeo{  _type,  "title": coalesce(title, ^.name),  description,  ogImage}  }
 export type PRODUCT_QUERY_RESULT = {
   _type: "product";
-  _id: string;
   _updatedAt: string;
   _createdAt: string;
+  _id: string;
   type:
     "bracelets" | "chains" | "earrings" | "necklaces" | "pendants" | "rings";
-  description: string | null;
-  materialsAndSpecifications: BlockContent | null;
   carats: number | null;
   thickness: string | null;
   length: string | null;
   weight: string | null;
+  description: string | null;
+  createdAt: string;
+  title: string | null;
+  slug: string | null;
+  previewImageUrl: string | null;
+  price: number | null;
+  maxPrice: number | null;
+  images: Array<{
+    _key: string;
+    asset: SanityImageAssetReference | null;
+    crop: SanityImageCrop | null;
+    hotspot: SanityImageHotspot | null;
+    alt: string | null;
+  }> | null;
+  materialsAndSpecifications: BlockContent | null;
   shippingReturnsWarranty: BlockContent | null;
   status: "draft" | "published";
   name: "Untitled Page";
-  slug: string | null;
   pageSeo: null;
 } | null;
 
@@ -1025,14 +1163,15 @@ export type ALL_PAGES_SLUGS_RESULT = Array<{
 declare global {
   interface SanityQueries {
     "\n  *[_type == \"settings\"][0]{\n    _type,\n    _id,\n    _updatedAt,\n    _createdAt,\n    \"title\": coalesce(title, \"Untitled Store\"),\n    metadataBase,\n    shippingReturnsWarranties,\n    header{\n      _type,\n      announcementBar{\n        _type,\n        content,\n        \"link\": links[0]{\n  _type,\n  _key,\n  linkType,\n  \"url\": select(\n    linkType == 'href' => href,\n    linkType == 'home' => '/',\n    linkType == 'plp' => '/products',\n    linkType == 'page' => '/' + page->slug.current,\n    linkType == 'product' => '/products/' + product->store.slug.current,\n    linkType == 'collection' => '/collections/' + collection->store.slug.current,\n  ),\n  \"label\": select(\n      label.length > 0 => label,\n      linkType == 'home' => 'Home',\n      linkType == 'plp' => 'All Products',\n      linkType == 'page' => page->name,\n      linkType == 'product' => product->store.title,\n      linkType == 'collection' => collection->store.title,\n      \"Link\"\n    ),\n  openInNewTab\n}\n      },\n      \"links\": links[]{\n  _type,\n  _key,\n  linkType,\n  \"url\": select(\n    linkType == 'href' => href,\n    linkType == 'home' => '/',\n    linkType == 'plp' => '/products',\n    linkType == 'page' => '/' + page->slug.current,\n    linkType == 'product' => '/products/' + product->store.slug.current,\n    linkType == 'collection' => '/collections/' + collection->store.slug.current,\n  ),\n  \"label\": select(\n      label.length > 0 => label,\n      linkType == 'home' => 'Home',\n      linkType == 'plp' => 'All Products',\n      linkType == 'page' => page->name,\n      linkType == 'product' => product->store.title,\n      linkType == 'collection' => collection->store.title,\n      \"Link\"\n    ),\n  openInNewTab\n}\n    },\n    footer{\n      _type,\n      productTypes,\n      \"infoLinks\": infoLinks[]{\n  _type,\n  _key,\n  linkType,\n  \"url\": select(\n    linkType == 'href' => href,\n    linkType == 'home' => '/',\n    linkType == 'plp' => '/products',\n    linkType == 'page' => '/' + page->slug.current,\n    linkType == 'product' => '/products/' + product->store.slug.current,\n    linkType == 'collection' => '/collections/' + collection->store.slug.current,\n  ),\n  \"label\": select(\n      label.length > 0 => label,\n      linkType == 'home' => 'Home',\n      linkType == 'plp' => 'All Products',\n      linkType == 'page' => page->name,\n      linkType == 'product' => product->store.title,\n      linkType == 'collection' => collection->store.title,\n      \"Link\"\n    ),\n  openInNewTab\n},\n      \"connectLinks\": connectLinks[]{\n  _type,\n  _key,\n  linkType,\n  \"url\": select(\n    linkType == 'href' => href,\n    linkType == 'home' => '/',\n    linkType == 'plp' => '/products',\n    linkType == 'page' => '/' + page->slug.current,\n    linkType == 'product' => '/products/' + product->store.slug.current,\n    linkType == 'collection' => '/collections/' + collection->store.slug.current,\n  ),\n  \"label\": select(\n      label.length > 0 => label,\n      linkType == 'home' => 'Home',\n      linkType == 'plp' => 'All Products',\n      linkType == 'page' => page->name,\n      linkType == 'product' => product->store.title,\n      linkType == 'collection' => collection->store.title,\n      \"Link\"\n    ),\n  openInNewTab\n},\n    },\n    footerImage,\n  }": SETTINGS_QUERY_RESULT;
-    '\n  *[_type == \'home\' ][0]{\n    _type,\n    _id,\n    _updatedAt,\n    _createdAt,\n    "status": select(_id in path("drafts.**") => "draft", "published"),\n    "name": "Home",\n    "slug": "/",\n    "pageBuilder": pageBuilder[]{\n      \n  _key,\n  _type,\n  // productTypeSection\n  heading,\n  productType,\n  "products": select(\n    _type == "productTypeSection" => *[_type == "product" && type == ^.productType && defined(store.slug.current)] | order(_updatedAt desc) {\n      _id,\n      store,\n    }\n  ),\n  // storySection\n  body,\n  "image": image{\n    asset,\n    crop,\n    hotspot,\n    alt,\n  },\n  // customPieceSection\n  description,\n  "cta": cta{\n    _type,\n    _key,\n    linkType,\n    href,\n    "page": page->slug.current,\n    "product": product->store.slug.current,\n    "collection": collection->store.slug.current,\n    label,\n    openInNewTab\n  }\n\n    },\n    pageSeo{\n  _type,\n  "title": coalesce(title, ^.name),\n  description,\n  ogImage\n}\n  }\n': HOME_QUERY_RESULT;
+    '\n  *[_type == \'home\' ][0]{\n    _type,\n    _id,\n    _updatedAt,\n    _createdAt,\n    "status": select(_id in path("drafts.**") => "draft", "published"),\n    "name": "Home",\n    "slug": "/",\n    "pageBuilder": pageBuilder[]{\n      \n  _key,\n  _type,\n  heading,\n  // productTypeSection\n  productType,\n  "products": select(\n    _type == "productTypeSection" => *[_type == "product" && type == ^.productType && defined(store.slug.current) && !(store.isDeleted == true)] | order(coalesce(store.createdAt, _createdAt) asc) {\n      \n  _id,\n  type,\n  carats,\n  thickness,\n  length,\n  weight,\n  description,\n  "createdAt": coalesce(store.createdAt, _createdAt),\n  "title": store.title,\n  "slug": store.slug.current,\n  "previewImageUrl": store.previewImageUrl,\n  "price": store.priceRange.minVariantPrice,\n  "maxPrice": store.priceRange.maxVariantPrice,\n  "images": images[]{ _key, asset, crop, hotspot, alt }\n\n    },\n    _type == "customPieceSection" => products[]->{\n      \n  _id,\n  type,\n  carats,\n  thickness,\n  length,\n  weight,\n  description,\n  "createdAt": coalesce(store.createdAt, _createdAt),\n  "title": store.title,\n  "slug": store.slug.current,\n  "previewImageUrl": store.previewImageUrl,\n  "price": store.priceRange.minVariantPrice,\n  "maxPrice": store.priceRange.maxVariantPrice,\n  "images": images[]{ _key, asset, crop, hotspot, alt }\n\n    }\n  ),\n  // storySection\n  body,\n  // customPieceSection\n  description,\n  "images": images[]{ _key, asset, crop, hotspot, alt },\n  karats,\n  thicknesses,\n  lengths,\n  weights,\n  materialsAndSpecifications,\n  priceLabel,\n  "shippingReturnsWarranties": select(\n    _type == "customPieceSection" => *[_type == "settings"][0].shippingReturnsWarranties\n  ),\n  "cta": cta{\n    _type,\n    _key,\n    linkType,\n    "url": select(\n      linkType == \'href\' => href,\n      linkType == \'home\' => \'/\',\n      linkType == \'plp\' => \'/products\',\n      linkType == \'page\' => \'/\' + page->slug.current,\n      linkType == \'product\' => \'/products/\' + product->store.slug.current,\n      linkType == \'collection\' => \'/collections/\' + collection->store.slug.current,\n    ),\n    label,\n    openInNewTab\n  }\n\n    },\n    pageSeo{\n  _type,\n  "title": coalesce(title, ^.name),\n  description,\n  ogImage\n}\n  }\n': HOME_QUERY_RESULT;
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _type,\n    _id,\n    _updatedAt,\n    _createdAt,\n    "status": select(_id in path("drafts.**") => "draft", "published"),\n    "name": coalesce(name, "Untitled Page"),\n    "slug": slug.current,\n    "pageBuilder": pageBuilder[]{\n      \n  _key,\n  _type,\n  "cover": cover[] {\n    _type,\n    "picture": select(_type == "picture" => {\n      asset,\n      crop,\n      hotspot,\n      alt,\n    }),\n    "color": select(_type == "color" => hex)\n  },\n  content,\n  "textColor": coalesce(textColor.hex, \'black\'),\n\n    },\n    pageSeo{\n  _type,\n  "title": coalesce(title, ^.name),\n  description,\n  ogImage\n}\n  }\n': PAGE_QUERY_RESULT;
     '\n  *[_type == \'collection\' && store.slug.current == $slug][0]{\n    _type,\n    _id,\n    _updatedAt,\n    _createdAt,\n    "status": select(_id in path("drafts.**") => "draft", "published"),\n    "name": coalesce(name, "Untitled Collection"),\n    "slug": slug.current,\n    store,\n    "editorial": {\n      "_type":\'page\',\n      _id,\n      _updatedAt,\n      _createdAt,\n      "status": select(_id in path("drafts.**") => "draft", "published"),\n      "name": coalesce(name, "Untitled Page"),\n      "slug": store.slug.current,\n      pageBuilder[]{\n        \n  _key,\n  _type,\n  "cover": cover[] {\n    _type,\n    "picture": select(_type == "picture" => {\n      asset,\n      crop,\n      hotspot,\n      alt,\n    }),\n    "color": select(_type == "color" => hex)\n  },\n  content,\n  "textColor": coalesce(textColor.hex, \'black\'),\n\n      },\n    },\n    pageSeo{\n  _type,\n  "title": coalesce(title, ^.name),\n  description,\n  ogImage\n}\n  }\n': COLLECTION_QUERY_RESULT;
     '\n  *[_type == "collection" && defined(store.slug.current) && !store.isDeleted] | order(date desc, _updatedAt desc) {\n    ...,\n  }\n': ALL_COLLECTIONS_QUERY_RESULT;
     '\n  *[_type == "product" && defined(store.slug.current)] | order(date desc, _updatedAt desc) {\n    ...,\n  }\n': ALL_PRODUCTS_QUERY_RESULT;
     '\n  *[_type == "product" && type == $type && defined(store.slug.current)] | order(date desc, _updatedAt desc) {\n    ...,\n  }\n': PRODUCTS_BY_TYPE_QUERY_RESULT;
+    '\n  *[_type == "product" && defined(store.slug.current) && !(store.isDeleted == true)] {\n    \n  _id,\n  type,\n  carats,\n  thickness,\n  length,\n  weight,\n  description,\n  "createdAt": coalesce(store.createdAt, _createdAt),\n  "title": store.title,\n  "slug": store.slug.current,\n  "previewImageUrl": store.previewImageUrl,\n  "price": store.priceRange.minVariantPrice,\n  "maxPrice": store.priceRange.maxVariantPrice,\n  "images": images[]{ _key, asset, crop, hotspot, alt }\n\n  }\n': INDEX_PRODUCTS_QUERY_RESULT;
     '\n  *[_type == "product" && _id != $skip && defined(store.slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    ...,\n  }\n': MORE_PRODUCTS_QUERY_RESULT;
-    '\n  *[_type == "product" && store.slug.current == $slug] [0] {\n    _type,\n    _id,\n    _updatedAt,\n    _createdAt,\n    type,\n    description,\n    materialsAndSpecifications,\n    carats,\n    thickness,\n    length,\n    weight,\n    "shippingReturnsWarranty": coalesce(\n      shippingReturnsWarrantyOverride,\n      *[_type == \'settings\'][0].shippingReturnsWarranties\n    ),\n    "status": select(_id in path("drafts.**") => "draft", "published"),\n    "name": coalesce(name, "Untitled Page"),\n    "slug": store.slug.current,\n    pageSeo{\n  _type,\n  "title": coalesce(title, ^.name),\n  description,\n  ogImage\n}\n  }\n': PRODUCT_QUERY_RESULT;
+    '\n  *[_type == "product" && store.slug.current == $slug] [0] {\n    _type,\n    _updatedAt,\n    _createdAt,\n    \n  _id,\n  type,\n  carats,\n  thickness,\n  length,\n  weight,\n  description,\n  "createdAt": coalesce(store.createdAt, _createdAt),\n  "title": store.title,\n  "slug": store.slug.current,\n  "previewImageUrl": store.previewImageUrl,\n  "price": store.priceRange.minVariantPrice,\n  "maxPrice": store.priceRange.maxVariantPrice,\n  "images": images[]{ _key, asset, crop, hotspot, alt }\n,\n    materialsAndSpecifications,\n    "shippingReturnsWarranty": coalesce(\n      shippingReturnsWarrantyOverride,\n      *[_type == \'settings\'][0].shippingReturnsWarranties\n    ),\n    "status": select(_id in path("drafts.**") => "draft", "published"),\n    "name": coalesce(name, "Untitled Page"),\n    pageSeo{\n  _type,\n  "title": coalesce(title, ^.name),\n  description,\n  ogImage\n}\n  }\n': PRODUCT_QUERY_RESULT;
     '\n  *[_type == "product" && store.slug.current == $slug] [0] {\n    _type,\n    _id,\n    store\n  }\n': PRODUCT_METADATA_QUERY_RESULT;
     '\n  *[_type == "product" && defined(store.slug.current)]\n  {"slug": store.slug.current}\n': ALL_PRODUCT_PAGES_SLUGS_RESULT;
     '\n  *[_type == "collection" && defined(store.slug.current)]\n  {"slug": store.slug.current}\n': ALL_COLLECTION_PAGES_SLUGS_RESULT;

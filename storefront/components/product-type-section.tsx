@@ -1,63 +1,55 @@
-import NextImage from "next/image";
-import NextLink from "next/link";
-import Price from "./price";
+import { ProductCard } from "../data/products";
+import { ProductTile } from "./product-tile/product-tile";
+import { Band } from "./wordmark/wordmark";
+import s from "./home.module.css";
 
 export type ProductTypeSectionBlock = {
   _type: "productTypeSection";
   _key: string;
   heading?: string | null;
   productType?: string | null;
-  products?: Array<{ _id: string; store?: any }> | null;
+  products?: ProductCard[] | null;
 };
 
 /**
- * Home page builder block: lists all products belonging to a chosen
- * product type (e.g. all "Necklaces"). The product list is resolved at
- * query time (see homePageBuilderFields in data/sanity/queries.ts) rather
- * than fetched here, since this component is rendered inside the
- * page-builder's client component tree and can't use server-only data
- * fetching directly.
+ * Home page builder block: every product of one type, three to a row on
+ * desktop (one on mobile), with the LAMGOLD band under each row.
+ * No band under the last row when a Story section follows (desktop only).
  */
-export function ProductTypeSection({ block }: { block: ProductTypeSectionBlock }) {
-  const { heading, productType, products } = block;
+export function ProductTypeSection({
+  block,
+  index = 0,
+  nextType,
+}: {
+  block: ProductTypeSectionBlock;
+  index?: number;
+  nextType?: string;
+}) {
+  const { productType, products } = block;
 
-  if (!productType || !products?.length) return null;
+  if (!products?.length) return null;
 
   return (
-    <section className="block-space container">
-      <h2>{heading || productType}</h2>
-      <div className="main-grid">
-        {products.map((product) => (
-          <article key={product._id}>
-            <NextLink href={`/products/${product.store?.slug?.current}`}>
-              <figure className="product-card">
-                {product.store?.previewImageUrl ? (
-                  <NextImage
-                    src={product.store.previewImageUrl}
-                    fill
-                    alt={`Image for product: ${product.store?.title}`}
-                    objectFit="contain"
-                    sizes="33vw"
-                  />
-                ) : null}
-                <figcaption>
-                  <span>{product.store?.title}</span>
-                  {product.store?.priceRange ? (
-                    <span>
-                      <Price
-                        amount={product.store.priceRange.minVariantPrice.amount}
-                        currencyCode={
-                          product.store.priceRange.minVariantPrice.currencyCode
-                        }
-                      />
-                    </span>
-                  ) : null}
-                </figcaption>
-              </figure>
-            </NextLink>
-          </article>
-        ))}
-      </div>
+    <section
+      id={productType ?? undefined}
+      className={s.rows}
+      aria-label={block.heading || productType || "Products"}
+    >
+      {products.map((product, i) => {
+        const isLast = i === products.length - 1;
+        const endsRow = (i + 1) % 3 === 0 || isLast;
+        const bandMobileOnly =
+          !endsRow || (isLast && nextType === "storySection");
+
+        return [
+          <ProductTile
+            key={product._id}
+            product={product}
+            priority={index === 0 && i < 3}
+          />,
+          <Band key={`${product._id}-band`} mobileOnly={bandMobileOnly} />,
+        ];
+      })}
     </section>
   );
 }

@@ -1202,6 +1202,28 @@
           },
           "optional": true
         },
+        "products": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "array",
+            "of": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              },
+              "rest": {
+                "type": "inline",
+                "name": "product.reference"
+              }
+            }
+          },
+          "optional": true
+        },
         "description": {
           "type": "objectAttribute",
           "value": {
@@ -1209,13 +1231,82 @@
           },
           "optional": true
         },
-        "image": {
+        "images": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "array",
+            "of": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              },
+              "rest": {
+                "type": "inline",
+                "name": "picture"
+              }
+            }
+          },
+          "optional": true
+        },
+        "karats": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "array",
+            "of": {
+              "type": "string"
+            }
+          },
+          "optional": true
+        },
+        "thicknesses": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "array",
+            "of": {
+              "type": "string"
+            }
+          },
+          "optional": true
+        },
+        "lengths": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "array",
+            "of": {
+              "type": "string"
+            }
+          },
+          "optional": true
+        },
+        "weights": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "array",
+            "of": {
+              "type": "string"
+            }
+          },
+          "optional": true
+        },
+        "materialsAndSpecifications": {
           "type": "objectAttribute",
           "value": {
             "type": "inline",
-            "name": "picture"
+            "name": "blockContent"
           },
-          "optional": false
+          "optional": true
+        },
+        "priceLabel": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
         },
         "cta": {
           "type": "objectAttribute",
@@ -1255,14 +1346,6 @@
             "name": "blockContent"
           },
           "optional": true
-        },
-        "image": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "picture"
-          },
-          "optional": false
         }
       }
     }
@@ -2473,6 +2556,28 @@
         "value": {
           "type": "inline",
           "name": "proxyString"
+        },
+        "optional": true
+      },
+      "images": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "object",
+            "attributes": {
+              "_key": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                }
+              }
+            },
+            "rest": {
+              "type": "inline",
+              "name": "picture"
+            }
+          }
         },
         "optional": true
       },

@@ -1,0 +1,36 @@
+.wordmark {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1900 / 142;
+  background-color: currentColor;
+  mask: url("../../styles/assets/logo/Footer/Logo.png") center / 100% 100% no-repeat;
+  -webkit-mask: url("../../styles/assets/logo/Footer/Logo.png") center / 100% 100% no-repeat;
+}
+
+/*
+ * Band: 160px in the 1920 frame (9px + 142px wordmark + 9px), so a row of
+ * tiles plus the band fills a 1080 viewport. Mobile: 10px + wordmark + 10px.
+ */
+.band {
+  grid-column: 1 / -1;
+  padding-block: 9px;
+  color: var(--color-text);
+}
+
+@media (max-width: 767px) {
+  .band {
+    padding-block: 10px;
+  }
+}
+
+@media (min-width: 768px) {
+  .mobileOnly {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .desktopOnly {
+    display: none;
+  }
+}

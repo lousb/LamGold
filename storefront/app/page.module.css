@@ -1,0 +1,10 @@
+/* First row starts 10px from the top (desktop), under the header (mobile) */
+.home {
+  padding-top: 10px;
+}
+
+@media (max-width: 767px) {
+  .home {
+    padding-top: 79.5px;
+  }
+}

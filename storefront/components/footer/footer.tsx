@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import logo from "../../styles/assets/logo/Footer/Logo.png";
 import { sanityFetch } from "../../data/sanity";
 import { SETTINGS_QUERY } from "../../data/sanity/queries";
+import { urlForImage } from "../../sanity/utils";
 import SanityLink from "../sanity-link";
+import { Wordmark } from "../wordmark/wordmark";
 import { FooterNewsletter } from "./footer-newsletter";
 import s from "./footer.module.css";
 
@@ -33,6 +34,7 @@ const capitalise = (value: string) =>
 export async function Footer() {
   const { data: settings } = await sanityFetch({ query: SETTINGS_QUERY });
   const footer = settings?.footer;
+  const footerImage = urlForImage(settings?.footerImage)?.width(800).url();
 
   const productTypes = footer?.productTypes?.length
     ? footer.productTypes
@@ -98,13 +100,22 @@ export async function Footer() {
         <FooterNewsletter />
       </section>
 
-      {/* Placeholder until the footer image is wired up (Site Settings → Footer image) */}
+      {/* Site Settings → Footer image (grey placeholder until it's set) */}
       <div className={`span-full ${s.imageRow}`}>
-        <div className={s.image} aria-hidden />
+        <div className={s.image}>
+          {footerImage ? (
+            <Image
+              src={footerImage}
+              alt={settings?.footerImage?.alt ?? ""}
+              fill
+              sizes="(max-width: 767px) 50vw, 20vw"
+            />
+          ) : null}
+        </div>
       </div>
 
       <div className={`span-full ${s.logo}`}>
-        <Image src={logo} alt="LamGold" sizes="100vw" priority={false} />
+        <Wordmark />
       </div>
     </footer>
   );

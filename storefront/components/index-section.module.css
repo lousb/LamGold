@@ -1,0 +1,135 @@
+/*
+ * Index (Home/Desktop: below the last LAMGOLD band, above the footer).
+ * Names in columns 1-8 (number + 51px), image in 9-16, spec rows in 17-24
+ * (karat col 17, thickness 22, length 23, weight 24) aligned to the bottom.
+ * Rows are 21px. Inactive entries are dimmed.
+ */
+
+.index {
+  height: calc(var(--tile-height) + 14px);
+  line-height: var(--line-height);
+}
+
+.index a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.names,
+.specs {
+  grid-column: span 8;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--color-text-muted);
+}
+
+.names .active,
+.specs .active {
+  color: var(--color-text);
+}
+
+.entry {
+  display: block;
+}
+
+.name {
+  display: flex;
+}
+
+.number {
+  flex: 0 0 51px;
+}
+
+.mobileSpecs,
+.mobileImage {
+  display: none;
+}
+
+.image {
+  position: relative;
+  overflow: hidden;
+  background: #d9d9d9;
+}
+
+.image img {
+  object-fit: cover;
+}
+
+.desktopImage {
+  grid-column: span 8;
+  height: var(--tile-height);
+}
+
+.specs {
+  align-self: end;
+}
+
+.specRow {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  column-gap: var(--grid-gutter);
+}
+
+.specRow span {
+  white-space: nowrap;
+}
+
+.specRow span:nth-child(1) { grid-column: 1 / 6; }
+.specRow span:nth-child(2) { grid-column: 6 / 7; }
+.specRow span:nth-child(3) { grid-column: 7 / 8; }
+.specRow span:nth-child(4) { grid-column: 8 / 9; }
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .specRow {
+    grid-template-columns: 1fr repeat(3, 4.5em);
+  }
+
+  .specRow span:nth-child(n) {
+    grid-column: auto;
+  }
+}
+
+/* Mobile: everything at full strength, specs under each name */
+@media (max-width: 767px) {
+  .index {
+    height: auto;
+    margin-top: -8px;
+  }
+
+  .names {
+    grid-column: 1 / -1;
+    color: var(--color-text);
+  }
+
+  .number {
+    flex-basis: calc(var(--grid-col) + var(--grid-gutter));
+  }
+
+  .mobileSpecs {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    column-gap: var(--grid-gutter);
+  }
+
+  .mobileSpecs span { white-space: nowrap; }
+  .mobileSpecs span:nth-child(1) { grid-column: 2 / 4; }
+  .mobileSpecs span:nth-child(2) { grid-column: 4 / 6; }
+  .mobileSpecs span:nth-child(3) { grid-column: 6 / 8; }
+  .mobileSpecs span:nth-child(4) {
+    grid-column: 8 / 9;
+    text-align: right;
+  }
+
+  .mobileImage {
+    display: block;
+    aspect-ratio: var(--tile-ratio);
+    margin-top: 4px;
+    margin-bottom: 6px;
+  }
+
+  .desktopImage,
+  .specs {
+    display: none;
+  }
+}

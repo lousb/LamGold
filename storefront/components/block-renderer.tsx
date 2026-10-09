@@ -16,6 +16,8 @@ type BlockType = {
 
 type BlockProps = {
   index: number;
+  /** _type of the following block (bands depend on what comes next) */
+  nextType?: string;
   block: BlockType;
   pageId: string;
   pageType: string;
@@ -34,7 +36,13 @@ const Blocks: BlocksType = {
 /**
  * Used by the <PageBuilder>, this component renders a the component that matches the block type.
  */
-export function BlockRenderer({ block, index, pageId, pageType }: BlockProps) {
+export function BlockRenderer({
+  block,
+  index,
+  nextType,
+  pageId,
+  pageType,
+}: BlockProps) {
   // Block does exist
   if (typeof Blocks[block._type] !== "undefined") {
     return (
@@ -50,6 +58,7 @@ export function BlockRenderer({ block, index, pageId, pageType }: BlockProps) {
           key: block._key,
           block: block,
           index: index,
+          nextType: nextType,
         })}
       </div>
     );

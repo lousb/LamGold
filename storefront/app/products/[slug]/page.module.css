@@ -1,70 +1,136 @@
-.page {
+/*
+ * Individual Product Page
+ * Desktop (1920 x 1080): 10px top, 8-column panels 910px tall (the tile
+ * height), LAMGOLD band - one screen. Type 16px: lines 21px, paragraphs 18px.
+ */
+
+.panels {
+  padding-top: 10px;
+}
+
+.left,
+.center,
+.right {
+  grid-column: span 8;
+  min-width: 0;
+  height: var(--tile-height);
+}
+
+/* Title + description centred on the panel, button on the bottom edge */
+.left {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--main-gap);
-  place-content: center;
-  place-items: center;
-  padding: var(--main-padding);
-  & > * {
-    width: 100%;
-  }
-  & > :first-child {
-    aspect-ratio: 1.7;
-  }
-
-  @media (max-width: 768px) {
-    & > :first-child {
-      aspect-ratio: 1.5;
-    }
-  }
-
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-    & > :first-child {
-      grid-column: 1;
-      aspect-ratio: 1.2;
-      order: 2;
-    }
-  }
+  grid-template-rows: 1fr auto auto 1fr;
 }
 
-.productDetails {
-  height: 100%;
-  padding-block-start: calc(var(--main-padding) * 2);
-  padding-inline: var(--main-padding);
-}
-
-.line {
+.title {
+  grid-row: 2;
   display: flex;
-  justify-content: start;
-  gap: calc(var(--main-gap) * 4);
+  font: inherit;
+  line-height: var(--line-height);
+}
 
-  dd {
-    display: flex;
-    gap: var(--main-gap);
+.number {
+  flex: 0 0 51px;
+}
 
-    @media (max-width: 480px) {
-      flex-wrap: wrap;
-    }
+.description {
+  grid-row: 3;
+  line-height: var(--line-height-tight);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.leftButton {
+  grid-row: 4;
+  align-self: end;
+}
+
+/* Spec row centred, accordions + button on the bottom edge */
+.right {
+  display: grid;
+  grid-template-rows: 1fr auto 1fr;
+}
+
+.specs {
+  grid-row: 2;
+}
+
+.rightFooter {
+  grid-row: 3;
+  align-self: end;
+}
+
+.rightButton {
+  margin-top: 40px;
+}
+
+/*
+ * Mobile (360 x 800): the first screen holds the title (~55px down), the
+ * image centred, the spec row and a full-bleed Add To Cart ending at the
+ * bottom of the viewport. Description and accordions follow.
+ */
+@media (max-width: 767px) {
+  .panels {
+    grid-template-rows: 76px calc(100svh - 148px) 21px 51px auto auto;
+    padding-top: 0;
   }
-}
 
-.option {
-  text-decoration: none;
-  border: none;
-  background: none;
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
+  .left,
+  .center,
+  .right,
+  .rightFooter {
+    display: contents;
   }
-}
 
-.active {
-  text-decoration: underline;
-  cursor: unset;
-}
+  .title,
+  .center > *,
+  .specs,
+  .rightButton,
+  .description,
+  .details {
+    grid-column: 1 / -1;
+  }
 
-.outOfStock {
-  cursor: not-allowed;
-  text-decoration: unset;
+  .title {
+    grid-row: 1;
+    align-self: end;
+  }
+
+  .number {
+    flex-basis: calc(var(--grid-col) + var(--grid-gutter));
+  }
+
+  .center > * {
+    grid-row: 2;
+    align-self: center;
+  }
+
+  .specs {
+    grid-row: 3;
+  }
+
+  .leftButton {
+    display: none !important;
+  }
+
+  .rightButton {
+    grid-row: 4;
+    width: auto;
+    margin: 0 calc(var(--grid-margin) * -1);
+  }
+
+  .description {
+    grid-row: 5;
+    margin-top: 9px;
+  }
+
+  .details {
+    grid-row: 6;
+    margin-top: 23px;
+  }
+
+  .band {
+    margin-top: -2.5px;
+    margin-bottom: 9px;
+  }
 }

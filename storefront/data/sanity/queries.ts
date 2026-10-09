@@ -7,6 +7,25 @@ const pageSeoFields = /* groq */ `
   ogImage
 `;
 
+
+// Everything a product tile / index row / product page needs from Sanity.
+export const productCardFields = /* groq */ `
+  _id,
+  type,
+  carats,
+  thickness,
+  length,
+  weight,
+  description,
+  "createdAt": coalesce(store.createdAt, _createdAt),
+  "title": store.title,
+  "slug": store.slug.current,
+  "previewImageUrl": store.previewImageUrl,
+  "price": store.priceRange.minVariantPrice,
+  "maxPrice": store.priceRange.maxVariantPrice,
+  "images": images[]{ _key, asset, crop, hotspot, alt }
+`;
+
 // Legacy generic page builder block (still used by Page/Collection editorial content)
 const pageBuilderFields = /* groq */ `
   _key,
@@ -29,33 +48,43 @@ const pageBuilderFields = /* groq */ `
 const homePageBuilderFields = /* groq */ `
   _key,
   _type,
-  // productTypeSection
   heading,
+  // productTypeSection
   productType,
   "products": select(
-    _type == "productTypeSection" => *[_type == "product" && type == ^.productType && defined(store.slug.current)] | order(_updatedAt desc) {
-      _id,
-      store,
+    _type == "productTypeSection" => *[_type == "product" && type == ^.productType && defined(store.slug.current) && !(store.isDeleted == true)] | order(coalesce(store.createdAt, _createdAt) asc) {
+      ${productCardFields}
+    },
+    _type == "customPieceSection" => products[]->{
+      ${productCardFields}
     }
   ),
   // storySection
   body,
-  "image": image{
-    asset,
-    crop,
-    hotspot,
-    alt,
-  },
   // customPieceSection
   description,
+  "images": images[]{ _key, asset, crop, hotspot, alt },
+  karats,
+  thicknesses,
+  lengths,
+  weights,
+  materialsAndSpecifications,
+  priceLabel,
+  "shippingReturnsWarranties": select(
+    _type == "customPieceSection" => *[_type == "settings"][0].shippingReturnsWarranties
+  ),
   "cta": cta{
     _type,
     _key,
     linkType,
-    href,
-    "page": page->slug.current,
-    "product": product->store.slug.current,
-    "collection": collection->store.slug.current,
+    "url": select(
+      linkType == 'href' => href,
+      linkType == 'home' => '/',
+      linkType == 'plp' => '/products',
+      linkType == 'page' => '/' + page->slug.current,
+      linkType == 'product' => '/products/' + product->store.slug.current,
+      linkType == 'collection' => '/collections/' + collection->store.slug.current,
+    ),
     label,
     openInNewTab
   }
@@ -199,6 +228,14 @@ export const PRODUCTS_BY_TYPE_QUERY = defineQuery(`
   }
 `);
 
+// Every product, for the numbered Index (home page + product numbering).
+// Sorted into the site's product type order in data/products.ts.
+export const INDEX_PRODUCTS_QUERY = defineQuery(`
+  *[_type == "product" && defined(store.slug.current) && !(store.isDeleted == true)] {
+    ${productCardFields}
+  }
+`);
+
 export const MORE_PRODUCTS_QUERY = defineQuery(`
   *[_type == "product" && _id != $skip && defined(store.slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {
     ...,
@@ -208,23 +245,16 @@ export const MORE_PRODUCTS_QUERY = defineQuery(`
 export const PRODUCT_QUERY = defineQuery(`
   *[_type == "product" && store.slug.current == $slug] [0] {
     _type,
-    _id,
     _updatedAt,
     _createdAt,
-    type,
-    description,
+    ${productCardFields},
     materialsAndSpecifications,
-    carats,
-    thickness,
-    length,
-    weight,
     "shippingReturnsWarranty": coalesce(
       shippingReturnsWarrantyOverride,
       *[_type == 'settings'][0].shippingReturnsWarranties
     ),
     "status": select(_id in path("drafts.**") => "draft", "published"),
     "name": coalesce(name, "Untitled Page"),
-    "slug": store.slug.current,
     pageSeo{${pageSeoFields}}
   }
 `);

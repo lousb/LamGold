@@ -1,8 +1,8 @@
 /*
- * Header/Desktop
- * Fixed bar: 20px from top/left, 100vw - 40px wide, 31px tall.
- * Three equal sections (Products / Custom / Index + Cart), 10px inner
- * padding and 10px between sections.
+ * Header
+ * Desktop: fixed bar 20px from top/left, 100vw - 40px wide, 31px tall.
+ * Text starts at x 30 / 660 / 1290 in the 1920 frame.
+ * Mobile: no bar - "Cart (0)" top right, "Back" top left on product pages.
  */
 
 .header {
@@ -15,13 +15,11 @@
 
 .bar {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  column-gap: 10px;
-  align-items: center;
+  grid-template-columns: 630fr 630fr 600fr;
   height: 31px;
-  padding-inline: 10px;
-  background: #000;
-  color: #fff;
+  padding: 9px 10px 3px;
+  background: var(--color-bg);
+  color: var(--color-text);
   font-family: var(--font-serif);
   font-size: 16px;
   font-weight: 400;
@@ -60,4 +58,41 @@
 .split {
   display: flex;
   justify-content: space-between;
+}
+
+.back {
+  display: none;
+}
+
+/* Desktop product pages have no header in the design */
+@media (min-width: 768px) {
+  body:has([data-page="product"]) .header {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .header {
+    top: 16px;
+  }
+
+  .bar {
+    display: flex;
+    justify-content: space-between;
+    height: auto;
+    padding: 0;
+    background: none;
+  }
+
+  .desktop {
+    display: none !important;
+  }
+
+  .split {
+    margin-left: auto;
+  }
+
+  body:has([data-page="product"]) .back {
+    display: block;
+  }
 }
