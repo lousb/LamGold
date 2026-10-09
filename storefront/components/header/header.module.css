@@ -16,8 +16,9 @@
 .bar {
   display: grid;
   grid-template-columns: 630fr 630fr 600fr;
+  align-items: center;
   height: 31px;
-  padding: 9px 10px 3px;
+  padding: 0 10px;
   background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-serif);

@@ -79,10 +79,10 @@
 .button {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   width: 100%;
   height: 30px;
-  padding: 4px 10px 5px;
+  padding: 0 10px;
   border: 0;
   background: var(--color-button);
   color: var(--color-button-text);

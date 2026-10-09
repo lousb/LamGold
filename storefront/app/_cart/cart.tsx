@@ -90,7 +90,7 @@ function CartLine({
   const fallback = merchandise.variantImage ?? merchandise.product.featuredImage;
   const images = info?.images.length
     ? info.images
-    : fallback
+    : fallback?.url
       ? [{ key: fallback.url, src: fallback.url, alt: fallback.altText ?? "" }]
       : [];
   const [name, variant] = splitTitle(info?.title || merchandise.product.title);

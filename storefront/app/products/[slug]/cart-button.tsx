@@ -13,10 +13,6 @@ export type DemoCartProduct = {
   image?: string;
 };
 
-// Presentation mode: Add To Cart works from Sanity data before Shopify is
-// connected (checkout stays disabled). Set NEXT_PUBLIC_DEMO_CART=1.
-const DEMO_CART = process.env.NEXT_PUBLIC_DEMO_CART === "1";
-
 function demoProduct(demo: DemoCartProduct): {
   product: Product;
   variant: ProductVariant;
@@ -49,7 +45,7 @@ function demoProduct(demo: DemoCartProduct): {
 /**
  * "Add To Cart ... AU$ 780" bar. Adds the first available variant (the
  * design has no option picker) and slides the cart in. Disabled until the
- * Shopify product loads, unless the demo cart is on.
+ * Shopify product loads. Without Shopify, `demo` adds a fake line instead.
  */
 export function CartButton({
   product,
@@ -66,7 +62,7 @@ export function CartButton({
   const { openOverlay } = useOverlay();
 
   const source =
-    product ?? (DEMO_CART && demo ? demoProduct(demo).product : null);
+    product ?? (demo ? demoProduct(demo).product : null);
   const variant =
     source?.variants.find((v) => v.availableForSale) ?? source?.variants[0];
   const available = !!source?.availableForSale && !!variant;

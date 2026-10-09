@@ -145,8 +145,12 @@ export default async function Page(props: Props) {
     );
   }
   const [karat, thickness, length, weight] = specRow(productPage);
+  // Fake cart lines (no checkout) until the store is connected
+  const demoCart =
+    !process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN ||
+    process.env.NEXT_PUBLIC_DEMO_CART === "1";
   const demo =
-    productPage.slug && productPage.price
+    demoCart && productPage.slug && productPage.price
       ? {
           handle: productPage.slug,
           title: productPage.title ?? "",
@@ -248,4 +252,4 @@ export default async function Page(props: Props) {
 }
 
 const PLACEHOLDER_DESCRIPTION =
-  "A classic curb chain with flattened, interlocking links that lie flat against the skin with precision-cut facets on the links that increase light reflection and sparkle. Comprised of 9K gold, this timeless necklace has a width of 1 millimetres, length of 42 centimetres and weighs 1.4 grams";
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";

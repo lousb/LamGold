@@ -5,6 +5,8 @@
  *   npm run content:push                  write everything
  *   npm run content:push -- --dry-run     check the sheet, print a summary
  *   npm run content:push -- --remove-dummy  delete the products this sheet made
+ *   npm run content:export                writes content/lamgold-import.tar.gz for
+ *                                         `npx sanity dataset import` (no token needed)
  *
  * Needs SANITY_API_WRITE_TOKEN (Editor) in storefront/.env.local or the
  * environment. Project + dataset come from the same file.
@@ -19,7 +21,8 @@ import { fileURLToPath } from "node:url";
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..");
 const args = new Set(process.argv.slice(2));
-const DRY = args.has("--dry-run");
+const EXPORT = args.has("--export");
+const DRY = args.has("--dry-run") || EXPORT;
 const REMOVE = args.has("--remove-dummy");
 
 const PRODUCT_TYPES = ["chains", "pendants", "bracelets", "earrings", "necklaces", "rings"];
@@ -148,6 +151,10 @@ async function picture(name, alt = "") {
   if (!existsSync(path)) {
     errors.push(`Image not found: content/images/${name}`);
     return null;
+  }
+  if (EXPORT) {
+    // `sanity dataset import` uploads this file and swaps in the asset reference
+    return { _type: "picture", _sanityAsset: `image@file://./images/${path.split("/").pop()}`, alt };
   }
   if (DRY) {
     // Same id shape Sanity gives an upload: image-<sha1>-<w>x<h>-<ext>
@@ -435,6 +442,24 @@ const clean = (doc) => JSON.parse(JSON.stringify(doc));
 console.log(
   `\n${products.length} products, ${pageBuilder.length} home sections, ${infoPages.length} information pages, settings, karat guide, necklace size guide`,
 );
+
+if (EXPORT) {
+  const { mkdirSync, rmSync, writeFileSync, cpSync } = await import("node:fs");
+  const { execFileSync } = await import("node:child_process");
+  const out = join(here, "lamgold-import");
+  rmSync(out, { recursive: true, force: true });
+  mkdirSync(out);
+  writeFileSync(join(out, "data.ndjson"), docs.map((d) => JSON.stringify(clean(d))).join("\n") + "\n");
+  cpSync(join(here, "images"), join(out, "images"), { recursive: true });
+  const tar = join(here, "lamgold-import.tar.gz");
+  execFileSync("tar", ["-czf", tar, "-C", here, "lamgold-import"]);
+  rmSync(out, { recursive: true, force: true });
+  console.log(
+    `Wrote content/lamgold-import.tar.gz. Import it with:\n\n` +
+      `  cd studio && npx sanity dataset import ../content/lamgold-import.tar.gz ${dataset} --replace\n`,
+  );
+  process.exit(0);
+}
 
 if (DRY) {
   console.log(`Dry run: nothing written to ${projectId}/${dataset}.\n`);

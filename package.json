@@ -7,7 +7,8 @@
     "dev": "concurrently \"npm run dev --workspace=storefront\" \"npm run dev --workspace=studio\"",
     "dev:storefront": "npm run dev --workspace=storefront",
     "dev:studio": "npm run dev --workspace=studio",
-    "content:push": "node content/push.mjs"
+    "content:push": "node content/push.mjs",
+    "content:export": "node content/push.mjs --export"
   },
   "workspaces": [
     "studio",

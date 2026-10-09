@@ -37,7 +37,16 @@ This project started from the [Sanity Photon](https://github.com/jazsouf/sanity-
 ## Content
 
 All the placeholder content lives in `content/lamgold-content.xlsx`, with the
-photos in `content/images/`. Edit the sheet, then push it to Sanity:
+photos in `content/images/`. `content/lamgold-import.tar.gz` is the same content
+as a Sanity import file (no token needed, just `npx sanity login`):
+
+```bash
+cd studio
+npx sanity dataset import ../content/lamgold-import.tar.gz production --replace
+```
+
+After editing the sheet, rebuild it with `npm run content:export`, or push
+straight to Sanity with a write token:
 
 ```bash
 npm run content:push -- --dry-run   # check the sheet
@@ -58,7 +67,7 @@ stand-ins; remove them with `npm run content:push -- --remove-dummy` first.
    - `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`,
      `NEXT_PUBLIC_SANITY_API_VERSION`, `SANITY_API_READ_TOKEN` (same as `.env.local`)
    - `NEXT_PUBLIC_SANITY_STUDIO_URL` = the hosted Studio, e.g. `https://lamgold.sanity.studio`
-   - `NEXT_PUBLIC_DEMO_CART` = `1` while presenting without Shopify
+   - Without a Shopify token, Add To Cart adds demo lines (checkout disabled)
    - `SHOPIFY_STORE_DOMAIN`, `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN` = `lamgold.myshopify.com`
    - Leave out `SHOPIFY_STOREFRONT_ACCESS_TOKEN` until the store is connected
    - `ENQUIRY_WEBHOOK_URL` when the enquiry form should send
