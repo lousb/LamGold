@@ -2,19 +2,14 @@
 
 import { collection } from "./documents/collection";
 import { infoPage } from "./documents/info-page";
-import { page } from "./documents/page";
 import { product } from "./documents/product";
 import { productVariant } from "./documents/product-variant";
 import { blockContent } from "./objects/editorial/block-content";
 import { customPieceSection } from "./objects/editorial/custom-piece-section";
-import { editorialBlock } from "./objects/editorial/editorial-block";
-import { newsletter } from "./objects/editorial/newsletter";
 import { picture } from "./objects/editorial/picture";
 import { productTypeSection } from "./objects/editorial/product-type-section";
 import { storySection } from "./objects/editorial/story-section";
-import { announcementBar } from "./objects/global/announcement-bar";
 import { footer } from "./objects/global/footer";
-import { header } from "./objects/global/header";
 import { link } from "./objects/global/link";
 import { pageSeo } from "./objects/global/page-seo";
 import { inventory } from "./objects/shopify/inventory";
@@ -40,16 +35,13 @@ export const schemaTypes = [
   necklaceSizeGuide,
   // Documents
   collection,
-  page,
   infoPage,
   product,
   productVariant,
   // Objects
   /// Editorial
   blockContent,
-  editorialBlock,
   picture,
-  newsletter,
   /// Home page builder blocks
   productTypeSection,
   storySection,
@@ -57,9 +49,7 @@ export const schemaTypes = [
   /// Global
   pageSeo,
   link,
-  header,
   footer,
-  announcementBar,
   /// Shopify
   inventory,
   option,

@@ -37,13 +37,15 @@ export const SINGLETONS: {
   settings: {
     id: "settings",
     _type: "settings",
-    title: "Site Settings",
+    title: "Settings",
     icon: CogIcon,
   },
 };
 
 export const singletonListItem = (S: StructureBuilder, singleton: Singleton) =>
-  S.documentTypeListItem(singleton._type)
+  S.listItem()
+    .id(singleton.id)
+    .title(singleton.title)
     .icon(singleton.icon)
     .child(
       S.document()

@@ -4,13 +4,10 @@ import { notFound } from "next/navigation";
 import { InfoPage } from "../../../components/info-page/info-page";
 import { PLACEHOLDER_INFO_PAGE } from "../../../components/info-page/placeholder";
 import { InfoPageData } from "../../../components/info-page/types";
-import { PageBuilder } from "../../../components/page-builder";
 import { sanityFetch } from "../../../data/sanity";
 import {
   ALL_INFO_PAGE_SLUGS,
-  ALL_PAGES_SLUGS,
   INFO_PAGE_QUERY,
-  PAGE_QUERY,
 } from "../../../data/sanity/queries";
 
 type Props = {
@@ -18,22 +15,15 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  const [{ data: pages }, { data: infoPages }] = await Promise.all([
-    sanityFetch({
-      query: ALL_PAGES_SLUGS,
-      perspective: "published",
-      stega: false,
-    }),
-    sanityFetch({
-      query: ALL_INFO_PAGE_SLUGS,
-      perspective: "published",
-      stega: false,
-    }),
-  ]);
-  return [...(pages ?? []), ...(infoPages ?? [])];
+  const { data } = await sanityFetch({
+    query: ALL_INFO_PAGE_SLUGS,
+    perspective: "published",
+    stega: false,
+  });
+  return data ?? [];
 }
 
-/** Information pages first (Privacy Policy etc.), then page-builder pages */
+/** Information pages: Privacy Policy, Terms & Conditions, Shipping and Returns... */
 async function getInfoPage(slug: string, stega = true) {
   const { data } = await sanityFetch({
     query: INFO_PAGE_QUERY,
@@ -52,32 +42,13 @@ async function getInfoPage(slug: string, stega = true) {
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
   const info = await getInfoPage(params.slug, false);
-  if (info) {
-    return { title: info.title, description: info.intro } satisfies Metadata;
-  }
-
-  const { data: page } = await sanityFetch({
-    query: PAGE_QUERY,
-    params,
-    stega: false,
-  });
-
-  return {
-    title: page?.name,
-    description: page?.pageSeo?.description,
-  } satisfies Metadata;
+  if (!info) return {};
+  return { title: info.title, description: info.intro } satisfies Metadata;
 }
 
 export default async function Page(props: Props) {
   const params = await props.params;
-
   const info = await getInfoPage(params.slug);
-  if (info) return <InfoPage page={info} />;
-
-  const { data: page } = await sanityFetch({ query: PAGE_QUERY, params });
-  if (!page?._id) {
-    return notFound();
-  }
-
-  return <PageBuilder page={page} />;
+  if (!info) return notFound();
+  return <InfoPage page={info} />;
 }

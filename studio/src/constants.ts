@@ -10,7 +10,7 @@ export const DEFAULT_CURRENCY_CODE = "AUD";
 
 export const PAGE_REFERENCES = [
   { type: "home" },
-  { type: "page" },
+  { type: "infoPage" },
   { type: "product" },
 ];
 

@@ -26,24 +26,6 @@ export const productCardFields = /* groq */ `
   "images": images[]{ _key, asset, crop, hotspot, alt }
 `;
 
-// Legacy generic page builder block (still used by Page/Collection editorial content)
-const pageBuilderFields = /* groq */ `
-  _key,
-  _type,
-  "cover": cover[] {
-    _type,
-    "picture": select(_type == "picture" => {
-      asset,
-      crop,
-      hotspot,
-      alt,
-    }),
-    "color": select(_type == "color" => hex)
-  },
-  content,
-  "textColor": coalesce(textColor.hex, 'black'),
-`;
-
 // Home page builder blocks: Product type section, Story section, Custom piece section
 const homePageBuilderFields = /* groq */ `
   _key,
@@ -92,7 +74,7 @@ const linkFields = /* groq */ `
       label.length > 0 => label,
       linkType == 'home' => 'Home',
       linkType == 'plp' => 'All Products',
-      linkType == 'page' => page->name,
+      linkType == 'page' => coalesce(page->title, page->name),
       linkType == 'product' => product->store.title,
       linkType == 'collection' => collection->store.title,
       "Link"
@@ -119,15 +101,6 @@ export const SETTINGS_QUERY = defineQuery(`
     metadataBase,
     shippingReturnsWarranties,
     customEnquiryIntro,
-    header{
-      _type,
-      announcementBar{
-        _type,
-        content,
-        "link": links[0]{${linkFields}}
-      },
-      "links": links[]{${linkFields}}
-    },
     footer{
       _type,
       productTypes,
@@ -150,54 +123,6 @@ export const HOME_QUERY = defineQuery(`
       ${homePageBuilderFields}
     },
     pageSeo{${pageSeoFields}}
-  }
-`);
-
-export const PAGE_QUERY = defineQuery(`
-  *[_type == 'page' && slug.current == $slug][0]{
-    _type,
-    _id,
-    _updatedAt,
-    _createdAt,
-    "status": select(_id in path("drafts.**") => "draft", "published"),
-    "name": coalesce(name, "Untitled Page"),
-    "slug": slug.current,
-    "pageBuilder": pageBuilder[]{
-      ${pageBuilderFields}
-    },
-    pageSeo{${pageSeoFields}}
-  }
-`);
-
-export const COLLECTION_QUERY = defineQuery(`
-  *[_type == 'collection' && store.slug.current == $slug][0]{
-    _type,
-    _id,
-    _updatedAt,
-    _createdAt,
-    "status": select(_id in path("drafts.**") => "draft", "published"),
-    "name": coalesce(name, "Untitled Collection"),
-    "slug": slug.current,
-    store,
-    "editorial": {
-      "_type":'page',
-      _id,
-      _updatedAt,
-      _createdAt,
-      "status": select(_id in path("drafts.**") => "draft", "published"),
-      "name": coalesce(name, "Untitled Page"),
-      "slug": store.slug.current,
-      pageBuilder[]{
-        ${pageBuilderFields}
-      },
-    },
-    pageSeo{${pageSeoFields}}
-  }
-`);
-
-export const ALL_COLLECTIONS_QUERY = defineQuery(`
-  *[_type == "collection" && defined(store.slug.current) && !store.isDeleted] | order(date desc, _updatedAt desc) {
-    ...,
   }
 `);
 
@@ -257,16 +182,6 @@ export const PRODUCT_METADATA_QUERY = defineQuery(`
 export const ALL_PRODUCT_PAGES_SLUGS = defineQuery(`
   *[_type == "product" && defined(store.slug.current)]
   {"slug": store.slug.current}
-`);
-
-export const ALL_COLLECTION_PAGES_SLUGS = defineQuery(`
-  *[_type == "collection" && defined(store.slug.current)]
-  {"slug": store.slug.current}
-`);
-
-export const ALL_PAGES_SLUGS = defineQuery(`
-  *[_type == "page" && defined(slug.current)]
-  {"slug": slug.current}
 `);
 
 // Information pages (Privacy Policy, Terms & Conditions, Shipping and Returns...)

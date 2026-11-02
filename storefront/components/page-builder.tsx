@@ -15,7 +15,7 @@ type PageBuilderSection = {
 };
 
 /**
- * Any document with a page builder: Home, Page, or a Collection's editorial.
+ * The Home page builder.
  * Kept structural so it accepts both plain and stega-encoded query results.
  */
 type Page = {
@@ -96,7 +96,7 @@ function renderEmptyState(page: Page) {
       <p>Open the page in Sanity Studio to add content.</p>
       <div>
         <Link
-          href={`${studioUrl}/structure/intent/edit/template=page;type=page;path=pageBuilder;id=${page._id}`}
+          href={`${studioUrl}/structure/intent/edit/type=home;path=pageBuilder;id=${page._id}`}
           target="_blank"
           rel="noopener noreferrer"
         >

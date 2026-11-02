@@ -2,11 +2,9 @@ import { LinkIcon } from "@sanity/icons/Link";
 import { defineField, defineType } from "sanity";
 
 /**
- * Link schema object. This link object lets the user first select the type of link and then
- * then enter the URL, page reference, or post reference - depending on the type selected.
- * Learn more: https://www.sanity.io/docs/object-type
+ * A link in the footer (Info / Connect columns). Pick what it points to,
+ * then fill in the one field that appears.
  */
-
 export const link = defineType({
   name: "link",
   title: "Link",
@@ -15,52 +13,34 @@ export const link = defineType({
   fields: [
     defineField({
       name: "linkType",
-      title: "Link Type",
+      title: "Links to",
       type: "string",
-      initialValue: "url",
+      initialValue: "page",
       validation: (rule) => rule.required(),
       options: {
         list: [
-          { title: "URL", value: "href" },
-          { title: "Home", value: "home" },
-          { title: "PLP - All Products", value: "plp" },
-          { title: "Page", value: "page" },
+          { title: "Info page", value: "page" },
           { title: "Product", value: "product" },
-          { title: "Collection", value: "collection" },
+          { title: "All products", value: "plp" },
+          { title: "Home", value: "home" },
+          { title: "Web address / email", value: "href" },
         ],
         layout: "radio",
       },
     }),
     defineField({
-      name: "href",
-      title: "URL",
-      type: "url",
-      hidden: ({ parent }) => parent?.linkType !== "href",
-      description: "Full URL, or a path on this site such as /karat-guide",
-      validation: (rule) =>
-        // Custom validation to ensure URL is provided if the link type is 'href'
-        rule.uri({ allowRelative: true, scheme: ["http", "https", "mailto", "tel"] }).custom((value, context: any) => {
-          if (context.parent?.linkType === "href" && !value) {
-            return "URL is required when Link Type is URL";
-          }
-          return true;
-        }),
-    }),
-    defineField({
       name: "page",
-      title: "Page",
+      title: "Info page",
       type: "reference",
       weak: true,
-      to: [{ type: "page" }, { type: "infoPage" }],
+      to: [{ type: "infoPage" }],
       hidden: ({ parent }) => parent?.linkType !== "page",
       validation: (rule) =>
-        // Custom validation to ensure page reference is provided if the link type is 'page'
-        rule.custom((value, context: any) => {
-          if (context.parent?.linkType === "page" && !value) {
-            return "Page reference is required when Link Type is Page";
-          }
-          return true;
-        }),
+        rule.custom((value, context: any) =>
+          context.parent?.linkType === "page" && !value
+            ? "Choose an info page"
+            : true,
+        ),
     }),
     defineField({
       name: "product",
@@ -70,95 +50,69 @@ export const link = defineType({
       to: [{ type: "product" }],
       hidden: ({ parent }) => parent?.linkType !== "product",
       validation: (rule) =>
-        // Custom validation to ensure post reference is provided if the link type is 'product'
-        rule.custom((value, context: any) => {
-          if (context.parent?.linkType === "product" && !value) {
-            return "Product reference is required when Link Type is Product";
-          }
-          return true;
-        }),
+        rule.custom((value, context: any) =>
+          context.parent?.linkType === "product" && !value
+            ? "Choose a product"
+            : true,
+        ),
     }),
     defineField({
-      name: "collection",
-      title: "Collection",
-      type: "reference",
-      weak: true,
-      to: [{ type: "collection" }],
-      hidden: ({ parent }) => parent?.linkType !== "collection",
+      name: "href",
+      title: "Web address",
+      type: "url",
+      hidden: ({ parent }) => parent?.linkType !== "href",
+      description:
+        "e.g. https://instagram.com/lamgold, mailto:hello@lamgold.com, or /karat-guide",
       validation: (rule) =>
-        // Custom validation to ensure post reference is provided if the link type is 'collection'
-        rule.custom((value, context: any) => {
-          if (context.parent?.linkType === "collection" && !value) {
-            return "Collection reference is required when Link Type is Collection";
-          }
-          return true;
-        }),
+        rule
+          .uri({ allowRelative: true, scheme: ["http", "https", "mailto", "tel"] })
+          .custom((value, context: any) =>
+            context.parent?.linkType === "href" && !value
+              ? "Enter a web address"
+              : true,
+          ),
     }),
     defineField({
       name: "label",
-      title: "Display Label",
+      title: "Label",
       type: "string",
       description:
-        "The label of the link. Required when it's a raw URL, otherwise the label will default to the name of the referenced link.",
+        "The text people see. Optional for pages and products (their name is used), required for web addresses.",
       validation: (rule) =>
-        // Custom validation to ensure the Display label is provided if the link type is 'href'
-        rule.custom((value, context: any) => {
-          if (context.parent?.linkType === "href" && !value) {
-            return "Name for URL is required when Link Type is URL";
-          }
-          return true;
-        }),
+        rule.custom((value, context: any) =>
+          context.parent?.linkType === "href" && !value
+            ? "Add a label for this web address"
+            : true,
+        ),
     }),
     defineField({
       name: "openInNewTab",
       title: "Open in new tab",
       type: "boolean",
-      validation: (rule) => rule.required(),
       initialValue: false,
+      validation: (rule) => rule.required(),
     }),
   ],
   preview: {
     select: {
       linkType: "linkType",
       label: "label",
-      pageName: "page.name",
-      productName: "product.store.title",
-      collectionName: "collection.store.title",
-      href: "href",
+      pageTitle: "page.title",
       pageSlug: "page.slug.current",
+      productName: "product.store.title",
       productSlug: "product.store.slug.current",
-      collectionSlug: "collection.store.slug.current",
+      href: "href",
     },
-    prepare(selection) {
-      const title =
-        selection.label ??
-        (selection.linkType === "home"
-          ? "Home Page"
-          : selection.linkType === "plp"
-            ? "All Products Page"
-            : selection.linkType === "page"
-              ? selection.pageName
-              : selection.linkType === "product"
-                ? selection.productName
-                : selection.linkType === "collection"
-                  ? selection.collectionName
-                  : "NO NAME FOUND");
-
-      const subtitle =
-        selection.linkType === "href"
-          ? `-> ${selection.href}`
-          : selection.linkType === "home"
-            ? `-> /`
-            : selection.linkType === "plp"
-              ? "-> /collections/all"
-              : selection.linkType === "page"
-                ? `-> /${selection.pageSlug}`
-                : selection.linkType === "product"
-                  ? `-> /products/${selection.productSlug}`
-                  : selection.linkType === "collection"
-                    ? `-> /collections/${selection.collectionSlug}`
-                    : "";
-      return { title, subtitle };
+    prepare(s) {
+      const byType: Record<string, [string | undefined, string]> = {
+        page: [s.pageTitle, `/${s.pageSlug ?? ""}`],
+        product: [s.productName, `/products/${s.productSlug ?? ""}`],
+        plp: ["All products", "/products"],
+        home: ["Home", "/"],
+        href: [s.href, s.href ?? ""],
+      };
+      const [name, path] = byType[s.linkType] ?? ["Link", ""];
+      return { title: s.label || name || "Untitled link", subtitle: path };
     },
   },
 });
