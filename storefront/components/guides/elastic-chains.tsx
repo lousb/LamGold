@@ -42,6 +42,18 @@ const CHAINS: number[][] = [
   ],
 ];
 
+/**
+ * Dashed leader line from each chain's lowest point out to its label,
+ * traced from the design (filled shapes). They ride along with the chain.
+ */
+const LEADERS: string[] = [
+  "M 960.1 650.5 L 960.1 651 L 963.1 651 L 963.1 650 L 960.1 650 Z M 969.1 650.5 L 969.1 651 L 975.1 651 L 975.1 650 L 969.1 650 Z M 981 650.5 L 981 651 L 987 651 L 987 650 L 981 650 Z M 993 650.5 L 993 651 L 999 651 L 999 650 L 993 650 Z M 1004.9 650.5 L 1004.9 651 L 1010.9 651 L 1010.9 650 L 1004.9 650 Z M 1016.9 650.5 L 1016.9 651 L 1022.9 651 L 1022.9 650 L 1016.9 650 Z M 1028.8 650.5 L 1028.8 651 L 1034.8 651 L 1034.8 650 L 1028.8 650 Z M 1040.8 650.5 L 1040.8 651 L 1046.8 651 L 1046.8 650 L 1040.8 650 Z M 1052.7 650.5 L 1052.7 651 L 1058.7 651 L 1058.7 650 L 1052.7 650 Z M 1064.7 650.5 L 1064.7 651 L 1070.7 651 L 1070.7 650 L 1064.7 650 Z M 1076.6 650.5 L 1076.6 651 L 1079.6 651 L 1079.6 650 L 1076.6 650 Z M 1076.6 650.5",
+  "M 960.1 679.1 L 960.1 679.6 L 963.1 679.6 L 963.1 678.6 L 960.1 678.6 Z M 969.1 679.1 L 969.1 679.6 L 975.1 679.6 L 975.1 678.6 L 969.1 678.6 Z M 981 679.1 L 981 679.6 L 987 679.6 L 987 678.6 L 981 678.6 Z M 993 679.1 L 993 679.6 L 999 679.6 L 999 678.6 L 993 678.6 Z M 1004.9 679.1 L 1004.9 679.6 L 1010.9 679.6 L 1010.9 678.6 L 1004.9 678.6 Z M 1016.9 679.1 L 1016.9 679.6 L 1022.9 679.6 L 1022.9 678.6 L 1016.9 678.6 Z M 1028.8 679.1 L 1028.8 679.6 L 1034.8 679.6 L 1034.8 678.6 L 1028.8 678.6 Z M 1040.8 679.1 L 1040.8 679.6 L 1046.8 679.6 L 1046.8 678.6 L 1040.8 678.6 Z M 1052.7 679.1 L 1052.7 679.6 L 1058.7 679.6 L 1058.7 678.6 L 1052.7 678.6 Z M 1064.7 679.1 L 1064.7 679.6 L 1070.7 679.6 L 1070.7 678.6 L 1064.7 678.6 Z M 1076.6 679.1 L 1076.6 679.6 L 1079.6 679.6 L 1079.6 678.6 L 1076.6 678.6 Z M 1076.6 679.1",
+  "M 960.1 712 L 960.1 712.5 L 963.1 712.5 L 963.1 711.5 L 960.1 711.5 Z M 969.1 712 L 969.1 712.5 L 975.1 712.5 L 975.1 711.5 L 969.1 711.5 Z M 981 712 L 981 712.5 L 987 712.5 L 987 711.5 L 981 711.5 Z M 993 712 L 993 712.5 L 999 712.5 L 999 711.5 L 993 711.5 Z M 1004.9 712 L 1004.9 712.5 L 1010.9 712.5 L 1010.9 711.5 L 1004.9 711.5 Z M 1016.9 712 L 1016.9 712.5 L 1022.9 712.5 L 1022.9 711.5 L 1016.9 711.5 Z M 1028.8 712 L 1028.8 712.5 L 1034.8 712.5 L 1034.8 711.5 L 1028.8 711.5 Z M 1040.8 712 L 1040.8 712.5 L 1046.8 712.5 L 1046.8 711.5 L 1040.8 711.5 Z M 1052.7 712 L 1052.7 712.5 L 1058.7 712.5 L 1058.7 711.5 L 1052.7 711.5 Z M 1064.7 712 L 1064.7 712.5 L 1070.7 712.5 L 1070.7 711.5 L 1064.7 711.5 Z M 1076.6 712 L 1076.6 712.5 L 1079.6 712.5 L 1079.6 711.5 L 1076.6 711.5 Z M 1076.6 712",
+  "M 960.1 755.5 L 960.1 756 L 963.1 756 L 963.1 755 L 960.1 755 Z M 969.1 755.5 L 969.1 756 L 975.1 756 L 975.1 755 L 969.1 755 Z M 981 755.5 L 981 756 L 987 756 L 987 755 L 981 755 Z M 993 755.5 L 993 756 L 999 756 L 999 755 L 993 755 Z M 1004.9 755.5 L 1004.9 756 L 1010.9 756 L 1010.9 755 L 1004.9 755 Z M 1016.9 755.5 L 1016.9 756 L 1022.9 756 L 1022.9 755 L 1016.9 755 Z M 1028.8 755.5 L 1028.8 756 L 1034.8 756 L 1034.8 755 L 1028.8 755 Z M 1040.8 755.5 L 1040.8 756 L 1046.8 756 L 1046.8 755 L 1040.8 755 Z M 1052.7 755.5 L 1052.7 756 L 1058.7 756 L 1058.7 755 L 1052.7 755 Z M 1064.7 755.5 L 1064.7 756 L 1070.7 756 L 1070.7 755 L 1064.7 755 Z M 1076.6 755.5 L 1076.6 756 L 1079.6 756 L 1079.6 755 L 1076.6 755 Z M 1076.6 755.5",
+  "M 960.1 792.8 L 960.1 793.3 L 963.1 793.3 L 963.1 792.3 L 960.1 792.3 Z M 969.1 792.8 L 969.1 793.3 L 975.1 793.3 L 975.1 792.3 L 969.1 792.3 Z M 981 792.8 L 981 793.3 L 987 793.3 L 987 792.3 L 981 792.3 Z M 993 792.8 L 993 793.3 L 999 793.3 L 999 792.3 L 993 792.3 Z M 1004.9 792.8 L 1004.9 793.3 L 1010.9 793.3 L 1010.9 792.3 L 1004.9 792.3 Z M 1016.9 792.8 L 1016.9 793.3 L 1022.9 793.3 L 1022.9 792.3 L 1016.9 792.3 Z M 1028.8 792.8 L 1028.8 793.3 L 1034.8 793.3 L 1034.8 792.3 L 1028.8 792.3 Z M 1040.8 792.8 L 1040.8 793.3 L 1046.8 793.3 L 1046.8 792.3 L 1040.8 792.3 Z M 1052.7 792.8 L 1052.7 793.3 L 1058.7 793.3 L 1058.7 792.3 L 1052.7 792.3 Z M 1064.7 792.8 L 1064.7 793.3 L 1070.7 793.3 L 1070.7 792.3 L 1064.7 792.3 Z M 1076.6 792.8 L 1076.6 793.3 L 1079.6 793.3 L 1079.6 792.3 L 1076.6 792.3 Z M 1076.6 792.8",
+];
+
 /** Samples per chain when it's bent */
 const SAMPLES = 96;
 /** How close (viewBox units) the cursor must come to catch a chain */
@@ -64,6 +76,8 @@ type Chain = {
   /** where along the chain it was caught (0..1) and its sample index */
   anchor: number;
   anchorIndex: number;
+  /** sample index of the lowest point, where the leader line starts */
+  bottom: number;
   offset: Point;
   velocity: Point;
   target: Point;
@@ -122,6 +136,7 @@ function weight(t: number, anchor: number) {
 export function ElasticChains() {
   const groupRef = useRef<SVGGElement>(null);
   const pathRefs = useRef<(SVGPathElement | null)[]>([]);
+  const leaderRefs = useRef<(SVGPathElement | null)[]>([]);
 
   useEffect(() => {
     const group = groupRef.current;
@@ -133,26 +148,54 @@ export function ElasticChains() {
       "(hover: hover) and (pointer: fine) and (min-width: 768px) and (prefers-reduced-motion: no-preference)",
     );
 
-    const chains: Chain[] = CHAINS.map((c) => ({
-      rest: restPath(c),
-      ...sample(c),
-      anchor: 0.5,
-      anchorIndex: 0,
-      offset: { x: 0, y: 0 },
-      velocity: { x: 0, y: 0 },
-      target: { x: 0, y: 0 },
-      grabbed: false,
-      moving: false,
-    }));
+    const labels = Array.from(
+      area.querySelectorAll<HTMLElement>("[data-chain-label]"),
+    );
+
+    const chains: Chain[] = CHAINS.map((c) => {
+      const sampled = sample(c);
+      const bottom = sampled.points.reduce(
+        (lowest, p, k) => (p.y > sampled.points[lowest].y ? k : lowest),
+        0,
+      );
+      return {
+        rest: restPath(c),
+        ...sampled,
+        bottom,
+        anchor: 0.5,
+        anchorIndex: 0,
+        offset: { x: 0, y: 0 },
+        velocity: { x: 0, y: 0 },
+        target: { x: 0, y: 0 },
+        grabbed: false,
+        moving: false,
+      };
+    });
 
     let frame = 0;
 
     const draw = (chain: Chain, i: number) => {
       const path = pathRefs.current[i];
+      const leader = leaderRefs.current[i];
+      const label = labels[i];
       if (!path) return;
       if (!chain.moving) {
         path.setAttribute("d", chain.rest);
+        leader?.removeAttribute("transform");
+        if (label) label.style.transform = "";
         return;
+      }
+      // Leader line + label follow the chain's lowest point
+      const wb = weight(chain.t[chain.bottom], chain.anchor);
+      const bx = chain.offset.x * wb;
+      const by = chain.offset.y * wb;
+      leader?.setAttribute(
+        "transform",
+        `translate(${bx.toFixed(2)} ${by.toFixed(2)})`,
+      );
+      if (label) {
+        const scale = svg.getBoundingClientRect().width / 627;
+        label.style.transform = `translate(${(bx * scale).toFixed(2)}px, ${(by * scale).toFixed(2)}px)`;
       }
       let d = "";
       chain.points.forEach((p, k) => {
@@ -284,16 +327,28 @@ export function ElasticChains() {
   }, []);
 
   return (
-    <g ref={groupRef} fill="none" stroke="currentColor" strokeWidth={1}>
-      {CHAINS.map((c, i) => (
+    <g ref={groupRef}>
+      {LEADERS.map((d, i) => (
         <path
-          key={i}
+          key={`leader-${i}`}
           ref={(el) => {
-            pathRefs.current[i] = el;
+            leaderRefs.current[i] = el;
           }}
-          d={restPath(c)}
+          d={d}
+          fill="currentColor"
         />
       ))}
+      <g fill="none" stroke="currentColor" strokeWidth={1}>
+        {CHAINS.map((c, i) => (
+          <path
+            key={i}
+            ref={(el) => {
+              pathRefs.current[i] = el;
+            }}
+            d={restPath(c)}
+          />
+        ))}
+      </g>
     </g>
   );
 }
