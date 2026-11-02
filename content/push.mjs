@@ -208,7 +208,19 @@ if (REMOVE) {
 // ---------------------------------------------------------------- products
 
 const productRows = rows("Products");
-const productId = (slug) => `${PRODUCT_PREFIX}${slug}`;
+
+// Products Sanity Connect has synced from Shopify (ids shopifyProduct-<id>),
+// keyed by handle. The sheet's specs and images are written onto these; the
+// stand-in dummy products are only made for handles Shopify doesn't have yet.
+const synced = new Map();
+if (!DRY) {
+  const found = await client.fetch(
+    `*[_type == "product" && !(_id match $p) && !(_id in path("drafts.**")) && defined(store.slug.current) && !(store.isDeleted == true)]{_id, "slug": store.slug.current}`,
+    { p: `${PRODUCT_PREFIX}*` },
+  );
+  for (const { _id, slug } of found) synced.set(slug, _id);
+}
+const productId = (slug) => synced.get(slug) ?? `${PRODUCT_PREFIX}${slug}`;
 const slugs = new Set();
 const products = [];
 const start = Date.UTC(2026, 0, 1);
@@ -468,6 +480,23 @@ if (DRY) {
 }
 
 const tx = client.transaction();
-docs.forEach((doc) => tx.createOrReplace(clean(doc)));
+const syncedIds = new Set(synced.values());
+for (const doc of docs) {
+  if (syncedIds.has(doc._id)) {
+    // Shopify owns `store` on synced products; only set the sheet's fields
+    const { _id, _type, store, ...fieldsOnly } = clean(doc);
+    tx.patch(_id, (p) => p.set(fieldsOnly));
+  } else {
+    tx.createOrReplace(clean(doc));
+  }
+}
+// Stand-ins replaced by a synced Shopify product
+const stale = (await client.fetch(`*[_id match $p]{_id, "slug": store.slug.current}`, { p: `${PRODUCT_PREFIX}*` }))
+  .filter((d) => synced.has(d.slug))
+  .map((d) => d._id);
+stale.forEach((id) => tx.delete(id));
 await tx.commit({ visibility: "async" });
+if (synced.size) {
+  console.log(`${synced.size} products linked to Shopify${stale.length ? `, ${stale.length} stand-ins removed` : ""}.`);
+}
 console.log(`✓ Pushed to ${projectId}/${dataset}. The site picks it up within a few seconds.\n`);

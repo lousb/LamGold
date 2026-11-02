@@ -1,9 +1,9 @@
 export const HIDDEN_PRODUCT_TAG = "nextjs-frontend-hidden";
 export const DEFAULT_OPTION = "Default Title";
-export const SHOPIFY_GRAPHQL_API_ENDPOINT = "/api/2023-01/graphql.json";
+export const SHOPIFY_GRAPHQL_API_ENDPOINT = "/api/2026-10/graphql.json";
 
-export const SHOPIFY_STORE_ID = process.env.SHOPIFY_STORE_ID;
-export const DEFAULT_CURRENCY_CODE = "EUR";
+export const SHOPIFY_STORE_ID = process.env.SANITY_STUDIO_SHOPIFY_STORE_ID;
+export const DEFAULT_CURRENCY_CODE = "AUD";
 
 export const PAGE_REFERENCES = [
   { type: "home" },

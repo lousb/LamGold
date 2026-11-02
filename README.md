@@ -58,6 +58,18 @@ The push needs an Editor token in `storefront/.env.local` as
 "Read me" tab explains each tab. Before Shopify is connected, products are
 stand-ins; remove them with `npm run content:push -- --remove-dummy` first.
 
+## Shopify
+
+Dev store: `lam-gold-v7x96ij5.myshopify.com` (Dev Dashboard → Stores → Lam Gold).
+Products were imported from the Products tab of the content sheet; handles
+match the Sanity slugs. Sanity Connect syncs them into Sanity as
+`shopifyProduct-<id>` documents. After a sync, run `npm run content:push`: it
+writes the sheet's specs and images onto the synced products and removes the
+stand-in `dummy-product-*` documents.
+
+Dev stores stay password protected (Online Store → Preferences), so checkout
+asks for the store password until the store moves to a paid plan.
+
 ## Deployment (Vercel)
 
 1. Import the GitHub repo in Vercel (Add New → Project).
@@ -67,9 +79,10 @@ stand-ins; remove them with `npm run content:push -- --remove-dummy` first.
    - `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`,
      `NEXT_PUBLIC_SANITY_API_VERSION`, `SANITY_API_READ_TOKEN` (same as `.env.local`)
    - `NEXT_PUBLIC_SANITY_STUDIO_URL` = the hosted Studio, e.g. `https://lamgold.sanity.studio`
+   - `SHOPIFY_STOREFRONT_ACCESS_TOKEN` = the Headless channel's public token
+     (Shopify admin → Headless → Lam Gold Headless → Storefront API)
    - Without a Shopify token, Add To Cart adds demo lines (checkout disabled)
-   - `SHOPIFY_STORE_DOMAIN`, `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN` = `lamgold.myshopify.com`
-   - Leave out `SHOPIFY_STOREFRONT_ACCESS_TOKEN` until the store is connected
+   - `SHOPIFY_STORE_DOMAIN`, `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN` = `lam-gold-v7x96ij5.myshopify.com`
    - `ENQUIRY_WEBHOOK_URL` when the enquiry form should send
 4. Deploy. Then in sanity.io/manage → API → CORS origins, add the Vercel URL
    (with credentials allowed) so live preview works.
