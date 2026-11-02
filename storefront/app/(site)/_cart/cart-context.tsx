@@ -8,8 +8,8 @@ import React, {
   useReducer,
   useState,
 } from "react";
-import { DEFAULT_CURRENCY_CODE } from "../../shopify/constants";
-import { Cart, CartItem, Product, ProductVariant } from "../../shopify/types";
+import { DEFAULT_CURRENCY_CODE } from "../../../shopify/constants";
+import { Cart, CartItem, Product, ProductVariant } from "../../../shopify/types";
 
 export const CART_STORAGE_KEY = "photon_shopify_cart";
 

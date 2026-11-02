@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { newsletterAction } from "../app/actions";
+import { newsletterAction } from "../app/(site)/actions";
 
 export default function Newsletter() {
   const [state, dispatch, isPending] = useActionState(newsletterAction, "idle");

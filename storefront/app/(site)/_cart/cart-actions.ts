@@ -1,4 +1,4 @@
-import { Cart } from "../../shopify/types";
+import { Cart } from "../../../shopify/types";
 
 /** Shopify cart permalink: /cart/variantId:qty,variantId:qty */
 export function checkoutUrl(cart: Cart) {

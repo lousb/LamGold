@@ -4,9 +4,9 @@ import NextImage from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-import { useOverlay } from "../../components/overlays/overlay-context";
-import panel from "../../components/overlays/panel.module.css";
-import { CartItem } from "../../shopify/types";
+import { useOverlay } from "../../../components/overlays/overlay-context";
+import panel from "../../../components/overlays/panel.module.css";
+import { CartItem } from "../../../shopify/types";
 import { redirectToCheckout } from "./cart-actions";
 import { useCart } from "./cart-context";
 import s from "./cart.module.css";

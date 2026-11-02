@@ -1,8 +1,8 @@
 "use client";
 
-import { useOverlay } from "../../../components/overlays/overlay-context";
-import { buttonClassName } from "../../../components/ui/cta-button";
-import { Product, ProductVariant } from "../../../shopify/types";
+import { useOverlay } from "../../../../components/overlays/overlay-context";
+import { buttonClassName } from "../../../../components/ui/cta-button";
+import { Product, ProductVariant } from "../../../../shopify/types";
 import { useCart } from "../../_cart/cart-context";
 
 /** Sanity data used for a demo cart line when Shopify isn't connected */

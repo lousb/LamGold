@@ -1,5 +1,5 @@
 import NextImage from "next/image";
-import { Image } from "../../../shopify/types";
+import { Image } from "../../../../shopify/types";
 
 export function ProductImage({
   shopifyImage,

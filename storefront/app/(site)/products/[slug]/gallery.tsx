@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ProductVariant, Image } from "../../../shopify/types";
+import { ProductVariant, Image } from "../../../../shopify/types";
 import { ProductImage } from "./product-image";
 import { useProduct } from "./product-context";
 import s from "./gallery.module.css";

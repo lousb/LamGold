@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
-import { ProductTypeSection } from "../../components/product-type-section";
+import { ProductTypeSection } from "../../../components/product-type-section";
 import {
   PLACEHOLDER_PRODUCTS,
   ProductCard,
   sortForIndex,
-} from "../../data/products";
-import { sanityFetch } from "../../data/sanity";
-import { INDEX_PRODUCTS_QUERY } from "../../data/sanity/queries";
+} from "../../../data/products";
+import { sanityFetch } from "../../../data/sanity";
+import { INDEX_PRODUCTS_QUERY } from "../../../data/sanity/queries";
 import s from "../page.module.css";
 
 type Props = {

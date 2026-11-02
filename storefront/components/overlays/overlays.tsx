@@ -3,18 +3,18 @@
 import dynamic from "next/dynamic";
 import { PortableTextBlock } from "next-sanity";
 
-import type { CartProductInfo } from "../../app/_cart/cart";
+import type { CartProductInfo } from "../../app/(site)/_cart/cart";
 import { EnquiryForm, EnquirySubmit } from "./enquiry-form";
 import { useOverlay } from "./overlay-context";
 import { Panel } from "./panel";
 
 // The cart lives in localStorage, so render it on the client only
 const CartItems = dynamic(
-  () => import("../../app/_cart/cart").then((m) => m.CartItems),
+  () => import("../../app/(site)/_cart/cart").then((m) => m.CartItems),
   { ssr: false },
 );
 const CartFooter = dynamic(
-  () => import("../../app/_cart/cart").then((m) => m.CartFooter),
+  () => import("../../app/(site)/_cart/cart").then((m) => m.CartFooter),
   { ssr: false },
 );
 

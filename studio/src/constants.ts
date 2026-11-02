@@ -2,7 +2,10 @@ export const HIDDEN_PRODUCT_TAG = "nextjs-frontend-hidden";
 export const DEFAULT_OPTION = "Default Title";
 export const SHOPIFY_GRAPHQL_API_ENDPOINT = "/api/2026-10/graphql.json";
 
-export const SHOPIFY_STORE_ID = process.env.SANITY_STUDIO_SHOPIFY_STORE_ID;
+export const SHOPIFY_STORE_ID =
+  process.env.SANITY_STUDIO_SHOPIFY_STORE_ID ||
+  // Embedded in the Next site: derive the admin handle from the store domain
+  process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN?.replace(/\.myshopify\.com$/, "");
 export const DEFAULT_CURRENCY_CODE = "AUD";
 
 export const PAGE_REFERENCES = [

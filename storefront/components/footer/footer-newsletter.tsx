@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 
-import { newsletterAction } from "../../app/actions";
+import { newsletterAction } from "../../app/(site)/actions";
 import s from "./footer.module.css";
 
 export function FooterNewsletter() {

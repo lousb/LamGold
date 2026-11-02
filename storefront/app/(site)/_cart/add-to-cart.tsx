@@ -1,6 +1,6 @@
 "use client";
 
-import { Product, ProductVariant } from "../../shopify/types";
+import { Product, ProductVariant } from "../../../shopify/types";
 import { useProduct } from "../products/[slug]/product-context";
 import { useCart } from "./cart-context";
 

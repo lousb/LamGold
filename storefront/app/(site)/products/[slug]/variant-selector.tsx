@@ -1,8 +1,8 @@
 "use client";
 import Form from "next/form";
-import Price from "../../../components/price";
-import { Product, ProductOption, ProductVariant } from "../../../shopify/types";
-import { cx } from "../../../utils/cx";
+import Price from "../../../../components/price";
+import { Product, ProductOption, ProductVariant } from "../../../../shopify/types";
+import { cx } from "../../../../utils/cx";
 import s from "./page.module.css";
 import { useProduct, useUpdateURL } from "./product-context";
 

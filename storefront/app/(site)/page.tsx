@@ -1,12 +1,12 @@
-import { PageBuilder } from "../components/page-builder";
-import { IndexSection } from "../components/index-section";
-import { sanityFetch } from "../data/sanity/";
-import { HOME_QUERY, INDEX_PRODUCTS_QUERY } from "../data/sanity/queries";
+import { PageBuilder } from "../../components/page-builder";
+import { IndexSection } from "../../components/index-section";
+import { sanityFetch } from "../../data/sanity/";
+import { HOME_QUERY, INDEX_PRODUCTS_QUERY } from "../../data/sanity/queries";
 import {
   PLACEHOLDER_PRODUCTS,
   ProductCard,
   sortForIndex,
-} from "../data/products";
+} from "../../data/products";
 import s from "./page.module.css";
 
 /**

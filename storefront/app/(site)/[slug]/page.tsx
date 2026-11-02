@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { InfoPage } from "../../components/info-page/info-page";
-import { PLACEHOLDER_INFO_PAGE } from "../../components/info-page/placeholder";
-import { InfoPageData } from "../../components/info-page/types";
-import { PageBuilder } from "../../components/page-builder";
-import { sanityFetch } from "../../data/sanity";
+import { InfoPage } from "../../../components/info-page/info-page";
+import { PLACEHOLDER_INFO_PAGE } from "../../../components/info-page/placeholder";
+import { InfoPageData } from "../../../components/info-page/types";
+import { PageBuilder } from "../../../components/page-builder";
+import { sanityFetch } from "../../../data/sanity";
 import {
   ALL_INFO_PAGE_SLUGS,
   ALL_PAGES_SLUGS,
   INFO_PAGE_QUERY,
   PAGE_QUERY,
-} from "../../data/sanity/queries";
+} from "../../../data/sanity/queries";
 
 type Props = {
   params: Promise<{ slug: string }>;

@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * This config is used to configure your Sanity Studio.
  * Learn more: https://www.sanity.io/docs/configuration
@@ -19,13 +21,25 @@ import { schemaTypes } from "./src/schema-types";
 import { structure } from "./src/structure";
 import { singletonTypes } from "./src/structure/singletons";
 
-// Environment variables for project configuration
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID || "your-projectID";
-const dataset = process.env.SANITY_STUDIO_DATASET || "production";
+// This config runs in two places: the standalone Studio (`sanity dev` /
+// `sanity deploy`, which only expose SANITY_STUDIO_* env vars) and embedded in
+// the Next.js site at /studio (which only exposes NEXT_PUBLIC_* vars).
+const embedded = Boolean(process.env.NEXT_PUBLIC_SANITY_PROJECT_ID);
 
-// URL for preview functionality, defaults to localhost:3000 if not set
-const SANITY_STUDIO_PREVIEW_URL =
-  process.env.SANITY_STUDIO_PREVIEW_URL || "http://localhost:3000";
+const projectId =
+  process.env.SANITY_STUDIO_PROJECT_ID ||
+  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
+  "your-projectID";
+const dataset =
+  process.env.SANITY_STUDIO_DATASET ||
+  process.env.NEXT_PUBLIC_SANITY_DATASET ||
+  "production";
+
+// Where the Preview tab loads the site from. Embedded, that's the site itself
+// (same origin); standalone, it defaults to the local Next dev server.
+const SANITY_STUDIO_PREVIEW_URL = embedded
+  ? undefined
+  : process.env.SANITY_STUDIO_PREVIEW_URL || "http://localhost:3000";
 
 // Define the home location for the presentation tool
 const homeLocation = {
@@ -53,6 +67,7 @@ function resolveHref(documentType?: string, slug?: string): string | undefined {
 export default defineConfig({
   name: "default",
   title: "LamGold",
+  basePath: embedded ? "/studio" : "/",
   projectId,
   dataset,
   plugins: [

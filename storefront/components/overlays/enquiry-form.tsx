@@ -3,7 +3,7 @@
 import { PortableTextBlock } from "next-sanity";
 import { useActionState, useEffect, useRef } from "react";
 
-import { enquiryAction } from "../../app/actions";
+import { enquiryAction } from "../../app/(site)/actions";
 import { CustomPortableText } from "../custom-portable-text";
 import s from "./enquiry.module.css";
 import panel from "./panel.module.css";

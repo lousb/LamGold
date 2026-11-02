@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 
-import s from "../../components/guides/guides.module.css";
-import { NecklaceDiagram } from "../../components/guides/necklace-diagram";
-import { Band } from "../../components/wordmark/wordmark";
-import { sanityFetch } from "../../data/sanity";
-import { NECKLACE_SIZE_GUIDE_QUERY } from "../../data/sanity/queries";
+import s from "../../../components/guides/guides.module.css";
+import { NecklaceDiagram } from "../../../components/guides/necklace-diagram";
+import { Band } from "../../../components/wordmark/wordmark";
+import { sanityFetch } from "../../../data/sanity";
+import { NECKLACE_SIZE_GUIDE_QUERY } from "../../../data/sanity/queries";
 
 export const metadata: Metadata = { title: "Necklace Size Guide" };
 

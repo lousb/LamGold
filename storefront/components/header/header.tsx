@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { LocalCart } from "../../app/_cart/local-cart";
+import { LocalCart } from "../../app/(site)/_cart/local-cart";
 import { sanityFetch } from "../../data/sanity";
 import { SETTINGS_QUERY } from "../../data/sanity/queries";
 import { OverlayTrigger } from "../overlays/overlay-context";

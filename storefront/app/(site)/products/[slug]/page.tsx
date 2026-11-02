@@ -2,11 +2,11 @@ import type { Metadata, ResolvingMetadata } from "next";
 import { PortableTextBlock } from "next-sanity";
 import { notFound } from "next/navigation";
 
-import { CustomPortableText } from "../../../components/custom-portable-text";
-import { Gallery } from "../../../components/gallery/gallery";
-import { Accordion } from "../../../components/ui/accordion";
-import { SpecColumns } from "../../../components/ui/spec-columns";
-import { Band } from "../../../components/wordmark/wordmark";
+import { CustomPortableText } from "../../../../components/custom-portable-text";
+import { Gallery } from "../../../../components/gallery/gallery";
+import { Accordion } from "../../../../components/ui/accordion";
+import { SpecColumns } from "../../../../components/ui/spec-columns";
+import { Band } from "../../../../components/wordmark/wordmark";
 import {
   formatIndexNumber,
   formatPrice,
@@ -15,17 +15,17 @@ import {
   productImages,
   sortForIndex,
   specRow,
-} from "../../../data/products";
-import { sanityFetch } from "../../../data/sanity";
+} from "../../../../data/products";
+import { sanityFetch } from "../../../../data/sanity";
 import {
   ALL_PRODUCT_PAGES_SLUGS,
   INDEX_PRODUCTS_QUERY,
   PRODUCT_METADATA_QUERY,
   PRODUCT_QUERY,
-} from "../../../data/sanity/queries";
-import { getProduct } from "../../../data/shopify";
-import { resolveOpenGraphImage } from "../../../sanity/utils";
-import { Product } from "../../../shopify/types";
+} from "../../../../data/sanity/queries";
+import { getProduct } from "../../../../data/shopify";
+import { resolveOpenGraphImage } from "../../../../sanity/utils";
+import { Product } from "../../../../shopify/types";
 import { CartButton } from "./cart-button";
 import s from "./page.module.css";
 

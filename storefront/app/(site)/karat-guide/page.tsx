@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import NextImage from "next/image";
 
-import s from "../../components/guides/guides.module.css";
-import { Band } from "../../components/wordmark/wordmark";
-import { sanityFetch } from "../../data/sanity";
-import { KARAT_GUIDE_QUERY } from "../../data/sanity/queries";
-import { urlForImage } from "../../sanity/utils";
+import s from "../../../components/guides/guides.module.css";
+import { Band } from "../../../components/wordmark/wordmark";
+import { sanityFetch } from "../../../data/sanity";
+import { KARAT_GUIDE_QUERY } from "../../../data/sanity/queries";
+import { urlForImage } from "../../../sanity/utils";
 
 export const metadata: Metadata = { title: "Karat Guide" };
 
