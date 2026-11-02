@@ -53,7 +53,7 @@ function resolveHref(documentType?: string, slug?: string): string | undefined {
   switch (documentType) {
     case "product":
       return slug ? `/products/${slug}` : undefined;
-    case "page":
+    case "infoPage":
       return slug ? `/${slug}` : undefined;
     case "home":
       return "/";
@@ -89,7 +89,7 @@ export default defineConfig({
           },
           {
             route: "/:slug",
-            filter: `_type == "page" && slug.current == $slug || _id == $slug`,
+            filter: `_type == "infoPage" && slug.current == $slug || _id == $slug`,
           },
           {
             route: "/products/:slug",
@@ -103,16 +103,16 @@ export default defineConfig({
             message: "This document is used on all pages",
             tone: "positive",
           }),
-          page: defineLocations({
+          infoPage: defineLocations({
             select: {
-              name: "name",
+              title: "title",
               slug: "slug.current",
             },
             resolve: (doc) => ({
               locations: [
                 {
-                  title: doc?.name || "Untitled",
-                  href: resolveHref("page", doc?.slug)!,
+                  title: doc?.title || "Untitled",
+                  href: resolveHref("infoPage", doc?.slug)!,
                 },
               ],
             }),
@@ -142,7 +142,8 @@ export default defineConfig({
       structure, // Custom studio structure configuration, imported from ./src/structure.ts
     }),
     // Additional plugins for enhanced functionality
-    visionTool({ title: "API" }),
+    // GROQ playground: developer-only, hidden from the client in production
+    ...(process.env.NODE_ENV === "development" ? [visionTool({ title: "API" })] : []),
     colorInput(),
     customDocumentActions(),
   ],

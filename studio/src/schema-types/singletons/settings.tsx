@@ -11,20 +11,17 @@ export const settings = defineType({
   type: "document",
   icon: CogIcon,
   groups: [
-    { name: "general", title: "General", icon: CogIcon, default: true },
+    { name: "general", title: "General", default: true },
+    { name: "footer", title: "Footer" },
+    { name: "advanced", title: "Advanced" },
   ],
   fields: [
     defineField({
       name: "title",
+      title: "Site title",
       group: "general",
       type: "string",
-      description: "The title of your storefront.",
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "header",
-      group: "general",
-      type: "header",
+      description: "Shown in the browser tab and search results.",
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -45,35 +42,25 @@ export const settings = defineType({
     }),
     defineField({
       name: "footer",
-      group: "general",
+      title: "Footer links",
+      group: "footer",
       type: "footer",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "footerImage",
-      group: "general",
+      group: "footer",
       title: "Footer image",
       type: "picture",
     }),
     defineField({
       name: "metadataBase",
-      group: "general",
+      title: "Website address",
+      group: "advanced",
       type: "url",
-      validation: (rule) => rule.required().uri({ scheme: ["http", "https"] }),
-      description: (
-        <span>
-          {
-            "The base url of your website. It should include protocol and full domain name. example -> https://mydomain.com"
-          }
-          <a
-            href="https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase"
-            rel="noreferrer noopener"
-            target="_blank"
-          >
-            More information
-          </a>
-        </span>
-      ),
+      validation: (rule) => rule.uri({ scheme: ["http", "https"] }),
+      description:
+        "The live website address, including https://. Used for social sharing previews. You can usually leave this alone.",
     }),
   ],
   preview: {

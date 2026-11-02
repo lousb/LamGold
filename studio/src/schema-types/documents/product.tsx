@@ -1,4 +1,3 @@
-import pluralize from "pluralize-esm";
 import { defineField, defineType } from "sanity";
 import { ShopifyIcon } from "../../components/shopify-icon";
 import { ShopifyDocumentStatus } from "../../components/shopify/shopify-document-status";
@@ -9,11 +8,11 @@ const GROUPS = [
   {
     default: true,
     name: "editorial",
-    title: "Editorial",
+    title: "Details",
   },
   {
     name: "shopifySync",
-    title: "Shopify sync",
+    title: "Shopify (read-only)",
     icon: ShopifyIcon,
   },
 ];
@@ -27,12 +26,13 @@ export const product = defineType({
     defineField({
       name: "titleProxy",
       title: "Title",
+      description: "Edit the title and price in Shopify. They sync here automatically.",
       type: "proxyString",
       options: { field: "store.title" },
     }),
     defineField({
       name: "slugProxy",
-      title: "Slug",
+      title: "Web address",
       type: "proxyString",
       options: { field: "store.slug.current" },
     }),
@@ -40,7 +40,7 @@ export const product = defineType({
       name: "images",
       title: "Images",
       description:
-        "Editorial images. The first is the main image on the product page and home page tile; the rest show as thumbnails. Falls back to the Shopify image when empty.",
+        "The first image is the main one on the home page and product page. If empty, the Shopify image is used.",
       type: "array",
       group: "editorial",
       of: [{ type: "picture" }],
@@ -51,8 +51,7 @@ export const product = defineType({
     defineField({
       name: "type",
       title: "Type",
-      description:
-        "Used for filtering the all-products view and for generating footer links.",
+      description: "Decides which section of the home page and footer this product appears under.",
       type: "string",
       group: "editorial",
       options: {
@@ -118,33 +117,26 @@ export const product = defineType({
   preview: {
     select: {
       isDeleted: "store.isDeleted",
-      options: "store.options",
       previewImageUrl: "store.previewImageUrl",
       priceRange: "store.priceRange",
       status: "store.status",
       title: "store.title",
-      variants: "store.variants",
+      type: "type",
     },
     prepare(selection) {
       const {
         isDeleted,
-        options,
         previewImageUrl,
         priceRange,
         status,
         title,
-        variants,
+        type,
       } = selection;
 
-      const optionCount = options?.length;
-      const variantCount = variants?.length;
-
-      const description = [
-        variantCount ? pluralize("variant", variantCount, true) : "No variants",
-        optionCount ? pluralize("option", optionCount, true) : "No options",
-      ];
-
-      let subtitle = getPriceRange(priceRange);
+      const typeLabel = PRODUCT_TYPE_OPTIONS.find((o) => o.value === type)?.title;
+      let subtitle = [typeLabel ?? "No type set", getPriceRange(priceRange)]
+        .filter(Boolean)
+        .join(" · ");
       if (status !== "active") {
         subtitle = "(Unavailable in Shopify)";
       }
@@ -153,7 +145,6 @@ export const product = defineType({
       }
 
       return {
-        description: description.join(" / "),
         subtitle,
         title,
         media: (

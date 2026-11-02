@@ -50,24 +50,6 @@ export const collection = defineType({
       options: { field: "store.slug.current" },
     }),
     defineField({
-      name: "pageBuilder",
-      title: "Page Builder",
-      type: "array",
-      of: [{ type: "editorialBlock" }],
-      options: {
-        insertMenu: {
-          // Configure the "Add Item" menu to display a thumbnail preview of the content type. https://www.sanity.io/docs/array-type#efb1fe03459d
-          views: [
-            {
-              name: "grid",
-              previewImageUrl: (schemaTypeName) =>
-                `/static/page-builder-thumbnails/${schemaTypeName}.webp`,
-            },
-          ],
-        },
-      },
-    }),
-    defineField({
       name: "store",
       title: "Shopify",
       type: "shopifyCollection",

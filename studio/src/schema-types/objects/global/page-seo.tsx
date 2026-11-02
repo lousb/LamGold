@@ -13,11 +13,7 @@ export const pageSeo = defineType({
       name: "title",
       title: "Title",
       type: "placeholderString",
-      description: (
-        <>
-          If empty, displays the name of the page (<code>name</code>)
-        </>
-      ),
+      description: "Leave empty to use the page name.",
       options: { field: "name" },
       validation: (Rule) =>
         Rule.max(50).warning(

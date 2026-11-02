@@ -1,8 +1,6 @@
 import React from "react";
 import { dataAttr } from "../sanity/utils";
 import { CustomPieceSection } from "./custom-piece-section";
-import { EditorialBlock } from "./editorial-block";
-import Newsletter from "./newsletter";
 import { ProductTypeSection } from "./product-type-section";
 import { StorySection } from "./story-section";
 type BlocksType = {
@@ -24,8 +22,6 @@ type BlockProps = {
 };
 
 const Blocks: BlocksType = {
-  editorialBlock: EditorialBlock,
-  newletter: Newsletter,
   // Home page builder blocks
   productTypeSection: ProductTypeSection,
   storySection: StorySection,
